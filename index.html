@@ -145,7 +145,7 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
       <div class="field"><label>6. Kualitas Pembelajaran</label><select id="ind6" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
     </div>
   </div>
-  <div class="card-note">Nilai Rapor Pendidikan Sekolah = <b id="rp-nilai-display">67.0</b> → Predikat: <b id="rp-predikat-display">SEDANG</b></div>
+  <div class="card-note">Nilai Rapor Pendidikan Sekolah = <b id="rp-nilai-display">67.00</b> → Predikat: <b id="rp-predikat-display">SEDANG</b></div>
 </div>
 
 <div class="controls">
@@ -204,13 +204,13 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
   <div class="card-body hidden" id="box-ringkas">
     <div class="field">
       <label id="lbl-ringkas-desc">Masukkan rerata gabungan 5 semester</label>
-      <input type="number" id="inp-rapor-ringkas" value="85" oninput="calc()">
+      <input type="number" id="inp-rapor-ringkas" value="85.00" step="0.01" oninput="calc()">
     </div>
   </div>
   <div class="card-note" style="background:var(--surface); border-top:1px solid var(--border); padding:12px 16px;">
     <div class="field-row">
-      <div class="field"><label>TKA Bahasa Indonesia</label><input type="number" id="tka-bi" value="80" oninput="calc()"></div>
-      <div class="field"><label>TKA Matematika</label><input type="number" id="tka-mat" value="80" oninput="calc()"></div>
+      <div class="field"><label>TKA Bahasa Indonesia</label><input type="number" id="tka-bi" value="80.00" step="0.01" oninput="calc()"></div>
+      <div class="field"><label>TKA Matematika</label><input type="number" id="tka-mat" value="80.00" step="0.01" oninput="calc()"></div>
     </div>
   </div>
   <div class="card-note">Rerata Rapor = <b id="lbl-rerata-rapor">–</b> | Rerata TKA = <b id="lbl-rerata-tka">–</b> → Gabungan (70%:30%) = <b id="lbl-gabungan">–</b></div>
@@ -273,7 +273,7 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
     </div>
 
   </div>
-  <div class="card-note">Skor Terbaca Matriks → Raw Akademik: <b id="raw-aka-display">0</b> | Raw Non-Akademik: <b id="raw-non-display">0</b></div>
+  <div class="card-note">Skor Terbaca Matriks → Raw Akademik: <b id="raw-aka-display">0.00</b> | Raw Non-Akademik: <b id="raw-non-display">0.00</b></div>
 </div>
 
 <div class="card">
@@ -362,7 +362,7 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
   </div>
 
   <div class="card-note" id="pemimpin-detail-note">
-    Skor Akhir Komponen: <b id="pemimpin-final-display">0</b>
+    Skor Akhir Komponen: <b id="pemimpin-final-display">0.00</b>
   </div>
 </div>
 
@@ -523,7 +523,7 @@ function switchRPMethod() {
   
   if (rpMethod === 'direct') {
     rpPredikatFinal = document.getElementById('rp-direct-select').value;
-    document.getElementById('rp-nilai-display').textContent = rpPredikatFinal === 'baik' ? '85.0' : rpPredikatFinal === 'sedang' ? '67.0' : '45.0';
+    document.getElementById('rp-nilai-display').textContent = rpPredikatFinal === 'baik' ? '85.00' : rpPredikatFinal === 'sedang' ? '67.00' : '45.00';
     document.getElementById('rp-predikat-display').textContent = rpPredikatFinal.toUpperCase();
     calc();
   } else {
@@ -535,7 +535,7 @@ function calcRP() {
   const vals = [1, 2, 3, 4, 5, 6].map(i => parseInt(document.getElementById('ind' + i).value));
   const avg = vals.reduce((a, b) => a + b, 0) / 6;
   rpPredikatFinal = avg >= 78 ? 'baik' : avg >= 55 ? 'sedang' : 'kurang';
-  document.getElementById('rp-nilai-display').textContent = (Math.round(avg * 10) / 10).toFixed(1);
+  document.getElementById('rp-nilai-display').textContent = (Math.round(avg * 100) / 100).toFixed(2);
   document.getElementById('rp-predikat-display').textContent = rpPredikatFinal.toUpperCase();
   calc();
 }
@@ -589,7 +589,7 @@ function buildRaporTable() {
   h += '<th>Rerata</th></tr></thead><tbody>';
   cfg.names.forEach((m, mi) => {
     h += `<tr><td class="lft">${m}</td>`;
-    cfg.sems.forEach((_, si) => h += `<td><input type="number" id="nv${mi}_${si}" min="0" max="100" step="0.01" value="80" oninput="calcRaporTableOnly()"></td>`);
+    cfg.sems.forEach((_, si) => h += `<td><input type="number" id="nv${mi}_${si}" min="0" max="100" step="0.01" value="80.00" oninput="calcRaporTableOnly()"></td>`);
     h += `<td class="avg" id="navg-m${mi}">–</td></tr>`;
   });
   h += '<tr class="sem-avg"><td class="lft">Rerata Akhir</td>';
@@ -599,13 +599,14 @@ function buildRaporTable() {
   calcRaporTableOnly();
 }
 
+// FORMAT 2 DIGIT: Menghitung nilai per mata pelajaran dan tabel paralel
 function calcRaporTableOnly() {
   const cfg = MAPEL_DATA[jenjang];
   let all = [];
   cfg.names.forEach((m, mi) => {
     let row = cfg.sems.map((_, si) => parseFloat(document.getElementById(`nv${mi}_${si}`).value) || 0);
     const avg = Math.round(row.reduce((a, b) => a + b, 0) / row.length * 100) / 100;
-    document.getElementById(`navg-m${mi}`).textContent = avg.toFixed(1);
+    document.getElementById(`navg-m${mi}`).textContent = avg.toFixed(2);
     all.push(...row);
   });
   const total = Math.round(all.reduce((a, b) => a + b, 0) / all.length * 100) / 100;
@@ -619,7 +620,7 @@ function calc() {
   // Perhitungan Persentil
   const peringkat = Math.max(1, parseInt(document.getElementById('inp-peringkat').value) || 1);
   const totalSiswa = Math.max(1, parseInt(document.getElementById('inp-total-siswa').value) || 1);
-  const persen = Math.min(Math.round(peringkat / totalSiswa * 100 * 10) / 10, 100);
+  const persen = Math.min(Math.round(peringkat / totalSiswa * 100 * 100) / 100, 100);
   
   let skorPersentil = 60;
   let tierP = '>20%';
@@ -634,12 +635,12 @@ function calc() {
     }
   }
   
-  document.getElementById('persentil-angka').textContent = persen.toFixed(1);
+  document.getElementById('persentil-angka').textContent = persen.toFixed(2);
   document.getElementById('persentil-tier').textContent = tierP;
-  document.getElementById('persentil-skor').textContent = skorPersentil;
+  document.getElementById('persentil-skor').textContent = skorPersentil.toFixed(2);
   document.getElementById('persentil-desc').textContent = TIER_DESC[rpPredikatFinal];
 
-  // Rapor & TKA
+  // Rapor & TKA (Dua Digit)
   let raporRaw = mode === 'lengkap' ? (parseFloat(document.getElementById('lbl-rerata-rapor').textContent) || 0) : (parseFloat(document.getElementById('inp-rapor-ringkas').value) || 0);
   const tkaBi = parseFloat(document.getElementById('tka-bi').value) || 0;
   const tkaMat = parseFloat(document.getElementById('tka-mat').value) || 0;
@@ -667,10 +668,10 @@ function calc() {
     rawNon = PRESTASI_MATRIX[t][k][j];
   }
 
-  document.getElementById('raw-aka-display').textContent = rawAka;
-  document.getElementById('raw-non-display').textContent = rawNon;
+  document.getElementById('raw-aka-display').textContent = rawAka.toFixed(2);
+  document.getElementById('raw-non-display').textContent = rawNon.toFixed(2);
 
-  // Logika Komponen 5 Terperinci (Kepemimpinan / Seleksi Ketat) beserta rincian teksnya
+  // Komponen Kepemimpinan & Seleksi Ketat (Diset 2 Digit)
   let skorPemimpin = 0;
   let detailTeksKepemimpinan = "";
 
@@ -686,8 +687,8 @@ function calc() {
       smaSeleksiSkor = parseInt(document.getElementById('sma-seleksi-hafiz').value) || 0;
     }
     
-    skorPemimpin = Math.round(osis * 0.4 + ekskul * 0.2 + smaSeleksiSkor * 0.4);
-    detailTeksKepemimpinan = `Rincian Unsur SMA → OSIS: <b>${osis}</b> (×40%) | Ekskul: <b>${ekskul}</b> (×20%) | Seleksi Ketat: <b>${smaSeleksiSkor}</b> (×40%) → <b>Skor Akhir Komponen: <span id="pemimpin-final-display">${skorPemimpin}</span></b>`;
+    skorPemimpin = Math.round((osis * 0.4 + ekskul * 0.2 + smaSeleksiSkor * 0.4) * 100) / 100;
+    detailTeksKepemimpinan = `Rincian Unsur SMA → OSIS: <b>${osis.toFixed(2)}</b> (×40%) | Ekskul: <b>${ekskul.toFixed(2)}</b> (×20%) | Seleksi Ketat: <b>${smaSeleksiSkor.toFixed(2)}</b> (×40%) → <b>Skor Akhir Komponen: <span id="pemimpin-final-display">${skorPemimpin.toFixed(2)}</span></b>`;
   } else {
     const smpType = document.getElementById('smp-seleksi-type').value;
     if (smpType === 'organisasi') {
@@ -697,31 +698,31 @@ function calc() {
     } else {
       skorPemimpin = 0;
     }
-    detailTeksKepemimpinan = `Skor Akhir Komponen Seleksi Ketat SMP: <b><span id="pemimpin-final-display">${skorPemimpin}</span></b>`;
+    detailTeksKepemimpinan = `Skor Akhir Komponen Seleksi Ketat SMP: <b><span id="pemimpin-final-display">${skorPemimpin.toFixed(2)}</span></b>`;
   }
   
   document.getElementById('pemimpin-detail-note').innerHTML = detailTeksKepemimpinan;
 
-  // Total Indeks Akhir
+  // FORMAT 2 DIGIT: Total Indeks Akhir dikunci menggunakan perkalian 100
   const kRapor = gabunganAkhir * b.rapor;
   const kPersen = skorPersentil * b.persentil;
   const kAka = rawAka * b.aka;
   const kNon = rawNon * b.non;
   const kPemimpin = skorPemimpin * b.pemimpin;
-  const total = Math.round((kRapor + kPersen + kAka + kNon + kPemimpin) * 10) / 10;
+  const total = Math.round((kRapor + kPersen + kAka + kNon + kPemimpin) * 100) / 100;
 
-  // Render UI
+  // Render UI (Seluruhnya Menggunakan .toFixed(2))
   document.getElementById('b-rapor').textContent = `Bobot: ${(b.rapor * 100).toFixed(0)}%`;
   document.getElementById('b-persentil').textContent = `Bobot: ${(b.persentil * 100).toFixed(0)}%`;
   document.getElementById('b-prestasi').textContent = `Bobot: Aka ${(b.aka * 100).toFixed(0)}% + Non ${(b.non * 100).toFixed(0)}%`;
   document.getElementById('b-kepemimpinan').textContent = `Bobot: ${(b.pemimpin * 100).toFixed(0)}%`;
 
-  document.getElementById('S-rapor').textContent = gabunganAkhir.toFixed(1);
-  document.getElementById('S-persentil').textContent = skorPersentil;
-  document.getElementById('S-skor-aka').textContent = rawAka;
-  document.getElementById('S-skor-non').textContent = rawNon;
-  document.getElementById('S-kepemimpinan').textContent = skorPemimpin;
-  document.getElementById('S-total').textContent = total.toFixed(1);
+  document.getElementById('S-rapor').textContent = gabunganAkhir.toFixed(2);
+  document.getElementById('S-persentil').textContent = skorPersentil.toFixed(2);
+  document.getElementById('S-skor-aka').textContent = rawAka.toFixed(2);
+  document.getElementById('S-skor-non').textContent = rawNon.toFixed(2);
+  document.getElementById('S-kepemimpinan').textContent = skorPemimpin.toFixed(2);
+  document.getElementById('S-total').textContent = total.toFixed(2);
   document.getElementById('S-bar').style.width = Math.min(total, 100) + '%';
   document.getElementById('S-jalur').textContent = `Jalur Prestasi ${jalur.toUpperCase()} · Jenjang ${jenjang.toUpperCase()}`;
 
@@ -730,10 +731,10 @@ function calc() {
 
   document.getElementById('S-breakdown').innerHTML = `
     <tr><td>Rapor + TKA Gabungan (70%:30%)</td><td class="r">${gabunganAkhir.toFixed(2)}</td><td class="r">${(b.rapor*100)}%</td><td class="r">${kRapor.toFixed(2)}</td></tr>
-    <tr><td>Persentil Peringkat Rapor (Mutu ${rpPredikatFinal.toUpperCase()})</td><td class="r">${skorPersentil}</td><td class="r">${(b.persentil*100)}%</td><td class="r">${kPersen.toFixed(2)}</td></tr>
-    <tr><td>Kejuaraan Akademik</td><td class="r">${rawAka}</td><td class="r">${(b.aka*100)}%</td><td class="r">${kAka.toFixed(2)}</td></tr>
-    <tr><td>Kejuaraan Non-Akademik</td><td class="r">${rawNon}</td><td class="r">${(b.non*100)}%</td><td class="r">${kNon.toFixed(2)}</td></tr>
-    <tr><td>${jenjang === 'sma' ? 'Indeks Kepemimpinan' : 'Seleksi Ketat'}</td><td class="r">${skorPemimpin}</td><td class="r">${(b.pemimpin*100)}%</td><td class="r">${kPemimpin.toFixed(2)}</td></tr>
+    <tr><td>Persentil Peringkat Rapor (Mutu ${rpPredikatFinal.toUpperCase()})</td><td class="r">${skorPersentil.toFixed(2)}</td><td class="r">${(b.persentil*100)}%</td><td class="r">${kPersen.toFixed(2)}</td></tr>
+    <tr><td>Kejuaraan Akademik</td><td class="r">${rawAka.toFixed(2)}</td><td class="r">${(b.aka*100)}%</td><td class="r">${kAka.toFixed(2)}</td></tr>
+    <tr><td>Kejuaraan Non-Akademik</td><td class="r">${rawNon.toFixed(2)}</td><td class="r">${(b.non*100)}%</td><td class="r">${kNon.toFixed(2)}</td></tr>
+    <tr><td>${jenjang === 'sma' ? 'Indeks Kepemimpinan' : 'Seleksi Ketat'}</td><td class="r">${skorPemimpin.toFixed(2)}</td><td class="r">${(b.pemimpin*100)}%</td><td class="r">${kPemimpin.toFixed(2)}</td></tr>
   `;
 }
 
