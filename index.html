@@ -54,9 +54,11 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); colo
 .card-title { font-size: 14px; font-weight: 600; flex: 1; }
 .pill { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
 .pill-blue { background: var(--blue-bg); color: var(--blue-text); }
+
 .card-body { padding: 14px 16px; }
 .card-note { background: var(--surface2); border-top: 1px solid var(--border); padding: 10px 16px; font-size: 12px; color: var(--text2); line-height: 1.5; }
 .card-note b { color: var(--text); font-family: 'DM Mono', monospace; }
+.card-note a { color: var(--accent); text-decoration: none; font-weight: 500; }
 
 .field { margin-bottom: 10px; }
 .field label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 4px; }
@@ -127,7 +129,7 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
     
     <div id="rp-box-direct" class="field">
       <label>Predikat Akhir Sekolah</label>
-      <select id="rp-direct-select" onchange="calc()">
+      <select id="rp-direct-select" onchange="switchRPMethod()">
         <option value="baik">Baik (Rerata 78 - 100)</option>
         <option value="sedang" selected>Sedang (Rerata 55 - 77)</option>
         <option value="kurang">Kurang (Rerata 33 - 54)</option>
@@ -157,7 +159,7 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
   <div>
     <div style="font-size:11px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px">Jalur PPDB</div>
     <div class="seg" id="seg-jalur">
-      <button class="on" onclick="setJalur('akademik',this)">Prestasi Akademik</button>
+      <button class="on" onclick="setJalur('akademik',this)">Prestasi Academic</button>
       <button onclick="setJalur('nonakademik',this)">Prestasi Nonakademik</button>
     </div>
   </div>
@@ -178,11 +180,11 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
     <div class="field-row">
       <div class="field">
         <label>Peringkat Anda</label>
-        <div class="field-inline"><input type="number" id="inp-peringkat" value="40" oninput="calc()"><span>urutan ke-</span></div>
+        <div class="field-inline"><input type="number" id="inp-peringkat" value="20" oninput="calc()"><span>urutan ke-</span></div>
       </div>
       <div class="field">
         <label>Total Siswa Paralel</label>
-        <div class="field-inline"><input type="number" id="inp-total-siswa" value="200" oninput="calc()"><span>orang</span></div>
+        <div class="field-inline"><input type="number" id="inp-total-siswa" value="100" oninput="calc()"><span>orang</span></div>
       </div>
     </div>
   </div>
@@ -222,7 +224,7 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
   </div>
   <div class="card-body">
     <div class="field" style="margin-bottom:15px; padding-bottom:10px; border-bottom:1px dashed var(--border)">
-      <label style="font-weight:600; color:var(--blue)">A. Sertifikat Bidang Academic / Perlombaan Sains</label>
+      <label style="font-weight:600; color:var(--blue)">A. Sertifikat Bidang Akademik / Perlombaan Sains</label>
       <select id="sertifikat-aka" onchange="calc()">
         <option value="0">Tidak Ada Sertifikat Akademik - Skor 0</option>
         <option value="100">Kedinasan Berjenjang · Internasional Juara 1 - Skor 100</option>
@@ -340,28 +342,27 @@ const BOBOT = {
   }
 };
 
-// PERBAIKAN LOGIKA BATAS MAKSIMUM DAN MINIMUM TIERING PERSENTIL SECARA SANGAT KETAT
 const TIER = {
   baik: [
-    { min: 0,   max: 15.0,  s: 100, t: '1–15%' },
-    { min: 15.0, max: 30.0,  s: 90,  t: '16–30%' },
-    { min: 30.0, max: 45.0,  s: 80,  t: '31–45%' },
-    { min: 45.0, max: 60.0,  s: 70,  t: '46–60%' },
-    { min: 60.0, max: 100.0, s: 60,  t: '>60%' }
+    { max: 15.0, s: 100, t: '1–15%' },
+    { max: 30.0, s: 90,  t: '16–30%' },
+    { max: 45.0, s: 80,  t: '31–45%' },
+    { max: 60.0, s: 70,  t: '46–60%' },
+    { max: 100.0, s: 60,  t: '>60%' }
   ],
   sedang: [
-    { min: 0,   max: 10.0,  s: 100, t: '1–10%' },
-    { min: 10.0, max: 20.0,  s: 90,  t: '11–20%' },
-    { min: 20.0, max: 30.0,  s: 80,  t: '21–30%' },
-    { min: 30.0, max: 40.0,  s: 70,  t: '31–40%' },
-    { min: 40.0, max: 100.0, s: 60,  t: '>40%' }
+    { max: 10.0, s: 100, t: '1–10%' },
+    { max: 20.0, s: 90,  t: '11–20%' },
+    { max: 30.0, s: 80,  t: '21–30%' },
+    { max: 40.0, s: 70,  t: '31–40%' },
+    { max: 100.0, s: 60,  t: '>40%' }
   ],
   kurang: [
-    { min: 0,   max: 5.0,   s: 100, t: '1–5%' },
-    { min: 5.0,  max: 10.0,  s: 90,  t: '6–10%' },
-    { min: 10.0, max: 15.0,  s: 80,  t: '11–15%' },
-    { min: 15.0, max: 20.0,  s: 70,  t: '16–20%' },
-    { min: 20.0, max: 100.0, s: 60,  t: '>20%' }
+    { max: 5.0,  s: 100, t: '1–5%' },
+    { max: 10.0, s: 90,  t: '6–10%' },
+    { max: 15.0, s: 80,  t: '11–15%' },
+    { max: 20.0, s: 70,  t: '16–20%' },
+    { max: 100.0, s: 60,  t: '>20%' }
   ]
 };
 
@@ -375,7 +376,9 @@ function switchRPMethod() {
   rpMethod = document.getElementById('rp-method').value;
   document.getElementById('rp-box-direct').classList.toggle('hidden', rpMethod !== 'direct');
   document.getElementById('rp-box-manual').classList.toggle('hidden', rpMethod !== 'manual');
+  
   if (rpMethod === 'direct') {
+    // KOREKSI UTAMA: Mengambil nilai langsung dari ID dropdown direct select yang benar
     rpPredikatFinal = document.getElementById('rp-direct-select').value;
     document.getElementById('rp-nilai-display').textContent = rpPredikatFinal === 'baik' ? '85.0' : rpPredikatFinal === 'sedang' ? '67.0' : '45.0';
     document.getElementById('rp-predikat-display').textContent = rpPredikatFinal.toUpperCase();
@@ -460,7 +463,7 @@ function calcRaporTableOnly() {
 function calc() {
   const b = BOBOT[jenjang][jalur];
   
-  // 1. PERBAIKAN BUG PERSENTIL: Logika Pemetaan Menggunakan Min & Max Secara Eksplisit
+  // Perhitungan Persentil yang sudah diperbaiki loop-nya
   const peringkat = Math.max(1, parseInt(document.getElementById('inp-peringkat').value) || 1);
   const totalSiswa = Math.max(1, parseInt(document.getElementById('inp-total-siswa').value) || 1);
   const persen = Math.min(Math.round(peringkat / totalSiswa * 100 * 10) / 10, 100);
@@ -471,11 +474,10 @@ function calc() {
   
   for (let i = 0; i < sebaranTier.length; i++) {
     const row = sebaranTier[i];
-    // Memakai pembanding inklusif terhadap batas atas wilayah persentil peringkat siswa
     if (persen <= row.max) {
       skorPersentil = row.s;
       tierP = row.t;
-      break; // Mengunci agar loop langsung berhenti saat kriteria terpenuhi
+      break;
     }
   }
   
@@ -484,7 +486,7 @@ function calc() {
   document.getElementById('persentil-skor').textContent = skorPersentil;
   document.getElementById('persentil-desc').textContent = TIER_DESC[rpPredikatFinal];
 
-  // 2. Rapor & TKA
+  // Rapor & TKA
   let raporRaw = mode === 'lengkap' ? (parseFloat(document.getElementById('lbl-rerata-rapor').textContent) || 0) : (parseFloat(document.getElementById('inp-rapor-ringkas').value) || 0);
   const tkaBi = parseFloat(document.getElementById('tka-bi').value) || 0;
   const tkaMat = parseFloat(document.getElementById('tka-mat').value) || 0;
@@ -495,13 +497,13 @@ function calc() {
   document.getElementById('lbl-rerata-tka').textContent = rerataTKA.toFixed(2);
   document.getElementById('lbl-gabungan').textContent = gabunganAkhir.toFixed(2);
 
-  // 3. Sertifikat
+  // Sertifikat
   const rawAka = parseFloat(document.getElementById('sertifikat-aka').value) || 0;
   const rawNon = parseFloat(document.getElementById('sertifikat-non').value) || 0;
   document.getElementById('raw-aka-display').textContent = rawAka;
   document.getElementById('raw-non-display').textContent = rawNon;
 
-  // 4. Kriteria Seleksi / Kepemimpinan
+  // Kepemimpinan
   let skorPemimpin = 0;
   if (jenjang === 'sma') {
     const osis = parseInt(document.getElementById('sma-osis').value) || 0;
@@ -513,7 +515,7 @@ function calc() {
   }
   document.getElementById('pemimpin-final-display').textContent = skorPemimpin;
 
-  // 5. Total Akumulasi Akhir
+  // Total Indeks Akhir
   const kRapor = gabunganAkhir * b.rapor;
   const kPersen = skorPersentil * b.persentil;
   const kAka = rawAka * b.aka;
@@ -521,7 +523,7 @@ function calc() {
   const kPemimpin = skorPemimpin * b.pemimpin;
   const total = Math.round((kRapor + kPersen + kAka + kNon + kPemimpin) * 10) / 10;
 
-  // Render UI Sync
+  // Render UI
   document.getElementById('b-rapor').textContent = `Bobot: ${(b.rapor * 100).toFixed(0)}%`;
   document.getElementById('b-persentil').textContent = `Bobot: ${(b.persentil * 100).toFixed(0)}%`;
   document.getElementById('b-prestasi').textContent = `Bobot: Aka ${(b.aka * 100).toFixed(0)}% + Non ${(b.non * 100).toFixed(0)}%`;
@@ -548,8 +550,8 @@ function calc() {
   `;
 }
 
+// Inisialisasi awal saat halaman dibuka
 buildRaporTable();
-setJenjang('smp', document.querySelector('#seg-jenjang button'));
 switchRPMethod();
 </script>
 </body>
