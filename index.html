@@ -159,7 +159,7 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
   <div>
     <div style="font-size:11px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px">Jalur PPDB</div>
     <div class="seg" id="seg-jalur">
-      <button class="on" onclick="setJalur('akademik',this)">Prestasi Academic</button>
+      <button class="on" onclick="setJalur('akademik',this)">Prestasi Akademik</button>
       <button onclick="setJalur('nonakademik',this)">Prestasi Nonakademik</button>
     </div>
   </div>
@@ -267,24 +267,78 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
   
   <div class="card-body hidden" id="box-pemimpin-sma">
     <div class="field"><label>Jabatan Inti OSIS / MPK (Unsur: 40%)</label>
-      <select id="sma-osis" onchange="calc()"><option value="0">Tidak ada</option><option value="100">Ketua</option><option value="67">Pengurus Harian</option><option value="33">Ketua/Anggota Seksi</option></select>
+      <select id="sma-osis" onchange="calc()"><option value="0">Tidak ada</option><option value="100">Ketua</option><option value="67">Pengurus Harian (Wakil, Sekr, Bend)</option><option value="33">Ketua/Anggota Seksi</option></select>
     </div>
     <div class="field"><label>Jabatan Ekstrakurikuler (Unsur: 20%)</label>
-      <select id="sma-ekskul" onchange="calc()"><option value="0">Tidak ada</option><option value="100">Ketua</option><option value="67">Pengurus</option><option value="33">Koordinator Lapangan</option></select>
+      <select id="sma-ekskul" onchange="calc()"><option value="0">Tidak ada</option><option value="100">Ketua</option><option value="67">Pengurus (Wakil, Sekr, Bend)</option><option value="33">Ketua Seksi atau Koordinator Seksi</option></select>
     </div>
-    <div class="field"><label>Seleksi Ketat — Garuda/Jumbara/Paskibra/Hafiz (Unsur: 40%)</label>
-      <select id="sma-seleksi" onchange="calc()"><option value="0">Tidak ada</option><option value="100">Tingkat Internasional</option><option value="81">Tingkat Nasional</option><option value="62">Tingkat Provinsi</option><option value="43">Tingkat Kota/Kab</option></select>
+    <div class="field"><label>Kategori Komponen Seleksi Ketat SMA (Unsur: 40%)</label>
+      <select id="sma-seleksi-type" onchange="toggleSeleksiKetatSub('sma')">
+        <option value="none">Tidak Ada Sertifikat Seleksi Ketat</option>
+        <option value="organisasi">Jambore Nasional / Pramuka Garuda / Paskibra / Jumbara</option>
+        <option value="hafiz">Hafiz Quran</option>
+      </select>
+    </div>
+    <div class="field hidden" id="sma-box-org">
+      <label>Tingkat Wilayah Organisasi</label>
+      <select id="sma-seleksi-org" onchange="calc()">
+        <option value="100">Tingkat Internasional - Skor 100</option>
+        <option value="81">Tingkat Nasional - Skor 81</option>
+        <option value="62">Tingkat Provinsi - Skor 62</option>
+        <option value="43">Tingkat Kota/Kabupaten - Skor 43</option>
+      </select>
+    </div>
+    <div class="field hidden" id="sma-box-hafiz">
+      <label>Kapasitas Jumlah Juz Hafiz Quran</label>
+      <select id="sma-seleksi-hafiz" onchange="calc()">
+        <option value="100">28 - 30 Juz - Skor 100</option>
+        <option value="94">25 - 27 Juz - Skor 94</option>
+        <option value="88">22 - 24 Juz - Skor 88</option>
+        <option value="82">19 - 21 Juz - Skor 82</option>
+        <option value="76">16 - 18 Juz - Skor 76</option>
+        <option value="70">13 - 15 Juz - Skor 70</option>
+        <option value="64">11 - 12 Juz - Skor 64</option>
+        <option value="58">9 - 10 Juz - Skor 58</option>
+        <option value="52">7 - 8 Juz - Skor 52</option>
+        <option value="46">5 - 6 Juz - Skor 46</option>
+        <option value="40">3 - 4 Juz - Skor 40</option>
+        <option value="34">1 - 2 Juz - Skor 34</option>
+      </select>
     </div>
   </div>
 
   <div class="card-body" id="box-pemimpin-smp">
-    <div class="field"><label>Capaian Sertifikasi Seleksi Ketat Bukan Perlombaan (Pramuka Garuda / Jambore Nasional / Jumbara PMR / Hafiz Quran)</label>
-      <select id="smp-seleksi" onchange="calc()">
-        <option value="0">Tidak Ada Kualifikasi Seleksi Ketat - Skor 0</option>
-        <option value="100">Tingkat Internasional / Hafiz Quran 28 - 30 Juz - Skor 100</option>
-        <option value="81">Tingkat Nasional / Hafiz Quran 19 - 21 Juz - Skor 81</option>
-        <option value="62">Tingkat Provinsi / Hafiz Quran 11 - 12 Juz - Skor 62</option>
-        <option value="43">Tingkat Kota-Kabupaten / Hafiz Quran 7 - 8 Juz - Skor 43</option>
+    <div class="field"><label>Kategori Komponen Seleksi Ketat Bukan Perlombaan SMP</label>
+      <select id="smp-seleksi-type" onchange="toggleSeleksiKetatSub('smp')">
+        <option value="none">Tidak Ada Sertifikat Seleksi Ketat</option>
+        <option value="organisasi">Jambore Nasional / Pramuka Garuda / Jumbara PMR</option>
+        <option value="hafiz">Hafiz Quran</option>
+      </select>
+    </div>
+    <div class="field hidden" id="smp-box-org">
+      <label>Tingkat Wilayah Penyelenggaraan</label>
+      <select id="smp-seleksi-org" onchange="calc()">
+        <option value="100">Tingkat Internasional - Skor 100</option>
+        <option value="81">Tingkat Nasional - Skor 81</option>
+        <option value="62">Tingkat Provinsi - Skor 62</option>
+        <option value="43">Tingkat Kota/Kabupaten - Skor 43</option>
+      </select>
+    </div>
+    <div class="field hidden" id="smp-box-hafiz">
+      <label>Kapasitas Jumlah Juz Hafiz Quran</label>
+      <select id="smp-seleksi-hafiz" onchange="calc()">
+        <option value="100">28 - 30 Juz - Skor 100</option>
+        <option value="94">25 - 27 Juz - Skor 94</option>
+        <option value="88">22 - 24 Juz - Skor 88</option>
+        <option value="82">19 - 21 Juz - Skor 82</option>
+        <option value="76">16 - 18 Juz - Skor 76</option>
+        <option value="70">13 - 15 Juz - Skor 70</option>
+        <option value="64">11 - 12 Juz - Skor 64</option>
+        <option value="58">9 - 10 Juz - Skor 58</option>
+        <option value="52">7 - 8 Juz - Skor 52</option>
+        <option value="46">5 - 6 Juz - Skor 46</option>
+        <option value="40">3 - 4 Juz - Skor 40</option>
+        <option value="34">1 - 2 Juz - Skor 34</option>
       </select>
     </div>
   </div>
@@ -378,7 +432,6 @@ function switchRPMethod() {
   document.getElementById('rp-box-manual').classList.toggle('hidden', rpMethod !== 'manual');
   
   if (rpMethod === 'direct') {
-    // KOREKSI UTAMA: Mengambil nilai langsung dari ID dropdown direct select yang benar
     rpPredikatFinal = document.getElementById('rp-direct-select').value;
     document.getElementById('rp-nilai-display').textContent = rpPredikatFinal === 'baik' ? '85.0' : rpPredikatFinal === 'sedang' ? '67.0' : '45.0';
     document.getElementById('rp-predikat-display').textContent = rpPredikatFinal.toUpperCase();
@@ -409,6 +462,10 @@ function setJenjang(j, el) {
   const cfg = MAPEL_DATA[jenjang];
   document.getElementById('lbl-ringkas-desc').textContent = `Masukkan rerata gabungan 5 semester untuk mapel (${cfg.names.join(', ')})`;
   
+  // Reset keadaan panel seleksi ketat saat berganti jenjang
+  toggleSeleksiKetatSub('smp');
+  toggleSeleksiKetatSub('sma');
+  
   buildRaporTable();
 }
 
@@ -425,6 +482,14 @@ function setMode(m, el) {
   el.classList.add('on');
   document.getElementById('box-lengkap').classList.toggle('hidden', m !== 'lengkap');
   document.getElementById('box-ringkas').classList.toggle('hidden', m !== 'ringkas');
+  calc();
+}
+
+// FUNGSI DINAMIS BARU: Menampilkan input spesifik sub-kategori Seleksi Ketat
+function toggleSeleksiKetatSub(pilihJenjang) {
+  const type = document.getElementById(`${pilihJenjang}-seleksi-type`).value;
+  document.getElementById(`${pilihJenjang}-box-org`).classList.toggle('hidden', type !== 'organisasi');
+  document.getElementById(`${pilihJenjang}-box-hafiz`).classList.toggle('hidden', type !== 'hafiz');
   calc();
 }
 
@@ -463,7 +528,7 @@ function calcRaporTableOnly() {
 function calc() {
   const b = BOBOT[jenjang][jalur];
   
-  // Perhitungan Persentil yang sudah diperbaiki loop-nya
+  // Perhitungan Persentil
   const peringkat = Math.max(1, parseInt(document.getElementById('inp-peringkat').value) || 1);
   const totalSiswa = Math.max(1, parseInt(document.getElementById('inp-total-siswa').value) || 1);
   const persen = Math.min(Math.round(peringkat / totalSiswa * 100 * 10) / 10, 100);
@@ -503,15 +568,33 @@ function calc() {
   document.getElementById('raw-aka-display').textContent = rawAka;
   document.getElementById('raw-non-display').textContent = rawNon;
 
-  // Kepemimpinan
+  // PERBAIKAN LOGIKA KALKULASI KOMPONEN 5 (Kepemimpinan / Seleksi Ketat)
   let skorPemimpin = 0;
   if (jenjang === 'sma') {
     const osis = parseInt(document.getElementById('sma-osis').value) || 0;
     const ekskul = parseInt(document.getElementById('sma-ekskul').value) || 0;
-    const resmiSeleksi = parseInt(document.getElementById('sma-seleksi').value) || 0;
-    skorPemimpin = Math.round(osis * 0.4 + ekskul * 0.2 + resmiSeleksi * 0.4);
+    
+    // Perhitungan sub komponen Seleksi Ketat SMA (Bobot unsur internal: 40%)
+    let smaSeleksiSkor = 0;
+    const smaType = document.getElementById('sma-seleksi-type').value;
+    if (smaType === 'organisasi') {
+      smaSeleksiSkor = parseInt(document.getElementById('sma-seleksi-org').value) || 0;
+    } else if (smaType === 'hafiz') {
+      smaSeleksiSkor = parseInt(document.getElementById('sma-seleksi-hafiz').value) || 0;
+    }
+    
+    // Total Indeks Gabungan Kepemimpinan SMA: (Osis * 0.4) + (Ekskul * 0.2) + (SeleksiKetat * 0.4)
+    skorPemimpin = Math.round(osis * 0.4 + ekskul * 0.2 + smaSeleksiSkor * 0.4);
   } else {
-    skorPemimpin = parseInt(document.getElementById('smp-seleksi').value) || 0;
+    // Perhitungan Seleksi Ketat SMP
+    const smpType = document.getElementById('smp-seleksi-type').value;
+    if (smpType === 'organisasi') {
+      skorPemimpin = parseInt(document.getElementById('smp-seleksi-org').value) || 0;
+    } else if (smpType === 'hafiz') {
+      skorPemimpin = parseInt(document.getElementById('smp-seleksi-hafiz').value) || 0;
+    } else {
+      skorPemimpin = 0;
+    }
   }
   document.getElementById('pemimpin-final-display').textContent = skorPemimpin;
 
