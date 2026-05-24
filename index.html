@@ -62,10 +62,10 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); colo
 
 .field { margin-bottom: 10px; }
 .field label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 4px; }
-.field input, .field select { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 13px; background: var(--surface); color: var(--text); transition: border-color 0.15s; }
+.field select, .field input { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 13px; background: var(--surface); color: var(--text); transition: border-color 0.15s; }
 .field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
-.field-row { display: flex; gap: 8px; }
-.field-row .field { flex: 1; }
+.field-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.field-row .field { flex: 1; margin-bottom: 0; }
 .field-inline { display: flex; align-items: center; gap: 8px; }
 .field-inline input { flex: 1; max-width: 100px; }
 .field-inline span { font-size: 12px; color: var(--text3); white-space: nowrap; }
@@ -223,39 +223,57 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
     <span class="pill pill-blue" id="b-prestasi">Bobot: 25% + 5%</span>
   </div>
   <div class="card-body">
-    <div class="field" style="margin-bottom:15px; padding-bottom:10px; border-bottom:1px dashed var(--border)">
-      <label style="font-weight:600; color:var(--blue)">A. Sertifikat Bidang Akademik / Perlombaan Sains</label>
-      <select id="sertifikat-aka" onchange="calc()">
-        <option value="0">Tidak Ada Sertifikat Akademik - Skor 0</option>
-        <option value="100">Kedinasan Berjenjang · Internasional Juara 1 - Skor 100</option>
-        <option value="97">Kedinasan Berjenjang · Internasional Juara 2 - Skor 97</option>
-        <option value="94">Kedinasan Berjenjang · Internasional Juara 3 - Skor 94</option>
-        <option value="91">Kedinasan Berjenjang · Nasional Juara 1 - Skor 91</option>
-        <option value="88">Kedinasan Berjenjang · Nasional Juara 2 - Skor 88</option>
-        <option value="85">Kedinasan Berjenjang · Nasional Juara 3 - Skor 85</option>
-        <option value="82">Kedinasan Berjenjang · Provinsi Juara 1 - Skor 82</option>
-        <option value="73">Kedinasan Berjenjang · Kota/Kab Juara 1 - Skor 73</option>
-        <option value="76">Hasil Kurasi Rekomendasi · Internasional Juara 1 - Skor 76</option>
-      </select>
+    
+    <div style="margin-bottom:18px; padding-bottom:14px; border-bottom:1px dashed var(--border)">
+      <label style="font-weight:600; color:var(--blue); display:block; margin-bottom:6px;">A. Sertifikat Bidang Akademik / Perlombaan Sains</label>
+      <div class="field" style="margin-bottom: 6px;">
+        <select id="aka-status" onchange="toggleKejuaraanSub('aka')">
+          <option value="tidak">Tidak Ada Sertifikat Akademik</option>
+          <option value="ada">Ada, Masukkan Detail Matriks Sertifikat...</option>
+        </select>
+      </div>
+      <div id="aka-matrix-box" class="field-row hidden">
+        <div class="field">
+          <label>Tingkat Wilayah</label>
+          <select id="aka-tingkat" onchange="calc()"></select>
+        </div>
+        <div class="field">
+          <label>Kategori / Penyelenggara</label>
+          <select id="aka-kat" onchange="calc()"></select>
+        </div>
+        <div class="field">
+          <label>Peringkat Juara</label>
+          <select id="aka-juara" onchange="calc()"></select>
+        </div>
+      </div>
     </div>
     
-    <div class="field">
-      <label style="font-weight:600; color:var(--accent)">B. Sertifikat Bidang Non-Akademik (Olahraga, Seni, Pramuka, dll)</label>
-      <select id="sertifikat-non" onchange="calc()">
-        <option value="0">Tidak Ada Sertifikat Non-Akademik - Skor 0</option>
-        <option value="100">Kedinasan Berjenjang · Internasional Juara 1 - Skor 100</option>
-        <option value="97">Kedinasan Berjenjang · Internasional Juara 2 - Skor 97</option>
-        <option value="94">Kedinasan Berjenjang · Internasional Juara 3 - Skor 94</option>
-        <option value="91">Kedinasan Berjenjang · Nasional Juara 1 - Skor 91</option>
-        <option value="88">Kedinasan Berjenjang · Nasional Juara 2 - Skor 88</option>
-        <option value="85">Kedinasan Berjenjang · Nasional Juara 3 - Skor 85</option>
-        <option value="82">Kedinasan Berjenjang · Provinsi Juara 1 - Skor 82</option>
-        <option value="73">Kedinasan Berjenjang · Kota/Kab Juara 1 - Skor 73</option>
-        <option value="76">Hasil Kurasi Rekomendasi · Internasional Juara 1 - Skor 76</option>
-      </select>
+    <div>
+      <label style="font-weight:600; color:var(--accent); display:block; margin-bottom:6px;">B. Sertifikat Bidang Non-Akademik (Olahraga, Seni, Keagamaan, dsb)</label>
+      <div class="field" style="margin-bottom: 6px;">
+        <select id="non-status" onchange="toggleKejuaraanSub('non')">
+          <option value="tidak">Tidak Ada Sertifikat Non-Akademik</option>
+          <option value="ada">Ada, Masukkan Detail Matriks Sertifikat...</option>
+        </select>
+      </div>
+      <div id="non-matrix-box" class="field-row hidden">
+        <div class="field">
+          <label>Tingkat Wilayah</label>
+          <select id="non-tingkat" onchange="calc()"></select>
+        </div>
+        <div class="field">
+          <label>Kategori / Penyelenggara</label>
+          <select id="non-kat" onchange="calc()"></select>
+        </div>
+        <div class="field">
+          <label>Peringkat Juara</label>
+          <select id="non-juara" onchange="calc()"></select>
+        </div>
+      </div>
     </div>
+
   </div>
-  <div class="card-note">Skor Terbaca → Raw Akademik: <b id="raw-aka-display">0</b> | Raw Non-Akademik: <b id="raw-non-display">0</b></div>
+  <div class="card-note">Skor Terbaca Matriks → Raw Akademik: <b id="raw-aka-display">0</b> | Raw Non-Akademik: <b id="raw-non-display">0</b></div>
 </div>
 
 <div class="card">
@@ -342,7 +360,10 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
       </select>
     </div>
   </div>
-  <div class="card-note">Skor Akhir Komponen: <b id="pemimpin-final-display">0</b></div>
+
+  <div class="card-note" id="pemimpin-detail-note">
+    Skor Akhir Komponen: <b id="pemimpin-final-display">0</b>
+  </div>
 </div>
 
 <div class="summary">
@@ -379,6 +400,41 @@ let jalur = 'akademik';
 let mode = 'lengkap';
 let rpMethod = 'direct';
 let rpPredikatFinal = 'sedang';
+
+const PRESTASI_MATRIX = {
+  'internasional': {
+    'kedinasan_berjenjang':    [100, 97, 94],
+    'kedinasan_tak_berjenjang': [92, 89, 86],
+    'organisasi_berjenjang':   [92, 89, 86],
+    'organisasi_tak_berjenjang':[84, 81, 78],
+    'kurasi_rekomendasi':      [76, 73, 70],
+    'kurasi_bebas':            [68, 65, 62]
+  },
+  'nasional': {
+    'kedinasan_berjenjang':    [91, 88, 85],
+    'kedinasan_tak_berjenjang': [83, 80, 77],
+    'organisasi_berjenjang':   [83, 80, 77],
+    'organisasi_tak_berjenjang':[75, 72, 69],
+    'kurasi_rekomendasi':      [67, 64, 61],
+    'kurasi_bebas':            [59, 56, 53]
+  },
+  'provinsi': {
+    'kedinasan_berjenjang':    [82, 79, 76],
+    'kedinasan_tak_berjenjang': [74, 71, 68],
+    'organisasi_berjenjang':   [74, 71, 68],
+    'organisasi_tak_berjenjang':[66, 63, 60],
+    'kurasi_rekomendasi':      [58, 55, 52],
+    'kurasi_bebas':            [50, 47, 44]
+  },
+  'kotakab': {
+    'kedinasan_berjenjang':    [73, 70, 67],
+    'kedinasan_tak_berjenjang': [65, 62, 59],
+    'organisasi_berjenjang':   [65, 62, 59],
+    'organisasi_tak_berjenjang':[57, 54, 51],
+    'kurasi_rekomendasi':      [49, 46, 43],
+    'kurasi_bebas':            [41, 38, 35]
+  }
+};
 
 const MAPEL_DATA = {
   smp: { names: ['Pendidikan Pancasila / PKn', 'Bahasa Indonesia', 'Matematika', 'IPA / IPAS'], sems: ['Kls 4 Sem 1', 'Kls 4 Sem 2', 'Kls 5 Sem 1', 'Kls 5 Sem 2', 'Kls 6 Sem 1'] },
@@ -426,6 +482,40 @@ const TIER_DESC = {
   kurang: 'Aturan Tier Sekolah (KURANG): 1–5%=100 · 6–10%=90 · 11–15%=80 · 16–20%=70 · >20%=60'
 };
 
+function initKejuaraanDropdowns(prefix) {
+  const tSel = document.getElementById(`${prefix}-tingkat`);
+  const kSel = document.getElementById(`${prefix}-kat`);
+  const jSel = document.getElementById(`${prefix}-juara`);
+
+  tSel.innerHTML = `
+    <option value="internasional">Internasional</option>
+    <option value="nasional">Nasional</option>
+    <option value="provinsi">Provinsi</option>
+    <option value="kotakab">Kota / Kabupaten</option>
+  `;
+
+  kSel.innerHTML = `
+    <option value="kedinasan_berjenjang">Kedinasan - Berjenjang</option>
+    <option value="kedinasan_tak_berjenjang">Kedinasan - Tidak Berjenjang</option>
+    <option value="organisasi_berjenjang">Induk Organisasi - Berjenjang</option>
+    <option value="organisasi_tak_berjenjang">Induk Organisasi - Tidak Berjenjang</option>
+    <option value="kurasi_rekomendasi">Hasil Kurasi - Rekomendasi</option>
+    <option value="kurasi_bebas">Hasil Kurasi - Pemasalan, Ekshibisi, Undangan, Festival</option>
+  `;
+
+  jSel.innerHTML = `
+    <option value="0">Juara 1</option>
+    <option value="1">Juara 2</option>
+    <option value="2">Juara 3</option>
+  `;
+}
+
+function toggleKejuaraanSub(prefix) {
+  const status = document.getElementById(`${prefix}-status`).value;
+  document.getElementById(`${prefix}-matrix-box`).classList.toggle('hidden', status !== 'ada');
+  calc();
+}
+
 function switchRPMethod() {
   rpMethod = document.getElementById('rp-method').value;
   document.getElementById('rp-box-direct').classList.toggle('hidden', rpMethod !== 'direct');
@@ -462,7 +552,6 @@ function setJenjang(j, el) {
   const cfg = MAPEL_DATA[jenjang];
   document.getElementById('lbl-ringkas-desc').textContent = `Masukkan rerata gabungan 5 semester untuk mapel (${cfg.names.join(', ')})`;
   
-  // Reset keadaan panel seleksi ketat saat berganti jenjang
   toggleSeleksiKetatSub('smp');
   toggleSeleksiKetatSub('sma');
   
@@ -485,7 +574,6 @@ function setMode(m, el) {
   calc();
 }
 
-// FUNGSI DINAMIS BARU: Menampilkan input spesifik sub-kategori Seleksi Ketat
 function toggleSeleksiKetatSub(pilihJenjang) {
   const type = document.getElementById(`${pilihJenjang}-seleksi-type`).value;
   document.getElementById(`${pilihJenjang}-box-org`).classList.toggle('hidden', type !== 'organisasi');
@@ -562,19 +650,34 @@ function calc() {
   document.getElementById('lbl-rerata-tka').textContent = rerataTKA.toFixed(2);
   document.getElementById('lbl-gabungan').textContent = gabunganAkhir.toFixed(2);
 
-  // Sertifikat
-  const rawAka = parseFloat(document.getElementById('sertifikat-aka').value) || 0;
-  const rawNon = parseFloat(document.getElementById('sertifikat-non').value) || 0;
+  // Pembacaan Skor Matriks Dinamis Kejuaraan
+  let rawAka = 0;
+  if(document.getElementById('aka-status').value === 'ada') {
+    const t = document.getElementById('aka-tingkat').value;
+    const k = document.getElementById('aka-kat').value;
+    const j = parseInt(document.getElementById('aka-juara').value);
+    rawAka = PRESTASI_MATRIX[t][k][j];
+  }
+
+  let rawNon = 0;
+  if(document.getElementById('non-status').value === 'ada') {
+    const t = document.getElementById('non-tingkat').value;
+    const k = document.getElementById('non-kat').value;
+    const j = parseInt(document.getElementById('non-juara').value);
+    rawNon = PRESTASI_MATRIX[t][k][j];
+  }
+
   document.getElementById('raw-aka-display').textContent = rawAka;
   document.getElementById('raw-non-display').textContent = rawNon;
 
-  // PERBAIKAN LOGIKA KALKULASI KOMPONEN 5 (Kepemimpinan / Seleksi Ketat)
+  // Logika Komponen 5 Terperinci (Kepemimpinan / Seleksi Ketat) beserta rincian teksnya
   let skorPemimpin = 0;
+  let detailTeksKepemimpinan = "";
+
   if (jenjang === 'sma') {
     const osis = parseInt(document.getElementById('sma-osis').value) || 0;
     const ekskul = parseInt(document.getElementById('sma-ekskul').value) || 0;
     
-    // Perhitungan sub komponen Seleksi Ketat SMA (Bobot unsur internal: 40%)
     let smaSeleksiSkor = 0;
     const smaType = document.getElementById('sma-seleksi-type').value;
     if (smaType === 'organisasi') {
@@ -583,10 +686,9 @@ function calc() {
       smaSeleksiSkor = parseInt(document.getElementById('sma-seleksi-hafiz').value) || 0;
     }
     
-    // Total Indeks Gabungan Kepemimpinan SMA: (Osis * 0.4) + (Ekskul * 0.2) + (SeleksiKetat * 0.4)
     skorPemimpin = Math.round(osis * 0.4 + ekskul * 0.2 + smaSeleksiSkor * 0.4);
+    detailTeksKepemimpinan = `Rincian Unsur SMA → OSIS: <b>${osis}</b> (×40%) | Ekskul: <b>${ekskul}</b> (×20%) | Seleksi Ketat: <b>${smaSeleksiSkor}</b> (×40%) → <b>Skor Akhir Komponen: <span id="pemimpin-final-display">${skorPemimpin}</span></b>`;
   } else {
-    // Perhitungan Seleksi Ketat SMP
     const smpType = document.getElementById('smp-seleksi-type').value;
     if (smpType === 'organisasi') {
       skorPemimpin = parseInt(document.getElementById('smp-seleksi-org').value) || 0;
@@ -595,8 +697,10 @@ function calc() {
     } else {
       skorPemimpin = 0;
     }
+    detailTeksKepemimpinan = `Skor Akhir Komponen Seleksi Ketat SMP: <b><span id="pemimpin-final-display">${skorPemimpin}</span></b>`;
   }
-  document.getElementById('pemimpin-final-display').textContent = skorPemimpin;
+  
+  document.getElementById('pemimpin-detail-note').innerHTML = detailTeksKepemimpinan;
 
   // Total Indeks Akhir
   const kRapor = gabunganAkhir * b.rapor;
@@ -634,6 +738,8 @@ function calc() {
 }
 
 // Inisialisasi awal saat halaman dibuka
+initKejuaraanDropdowns('aka');
+initKejuaraanDropdowns('non');
 buildRaporTable();
 switchRPMethod();
 </script>
