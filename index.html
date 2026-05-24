@@ -538,4 +538,42 @@ function calc() {
   const total = Math.round((k1 + k2 + k3 + k4) * 10) / 10;
 
   // Render Pill Bobot Dinamis
-  document.getElementById('b-rapor').textContent = `Bobot:
+  document.getElementById('b-rapor').textContent = `Bobot: ${(b.rapor * 100).toFixed(0)}%`;
+  document.getElementById('b-persentil').textContent = `Bobot: ${(b.persentil * 100).toFixed(0)}%`;
+  document.getElementById('b-prestasi').textContent = `Bobot: ${(pbP * 100).toFixed(0)}%`;
+  document.getElementById('b-kepemimpinan').textContent = `Bobot: ${(b.p * 100).toFixed(0)}%`;
+
+  // Update Blok Rangkuman Hasil Akhir
+  document.getElementById('S-rapor').textContent = gabunganAkhir.toFixed(1);
+  document.getElementById('S-persentil').textContent = skorPersentil;
+  document.getElementById('S-prestasi').textContent = skorPrestasi || '0';
+  document.getElementById('S-kepemimpinan').textContent = skorPemimpin;
+  document.getElementById('S-total').textContent = total.toFixed(1);
+  document.getElementById('S-bar').style.width = Math.min(total, 100) + '%';
+  document.getElementById('S-jalur').textContent = 
+    `Jalur Keseluruhan: Prestasi ${jalur === 'akademik' ? 'Akademik' : 'Nonakademik'} · Jenjang ${jenjang.toUpperCase()}`;
+
+  let verdict = '', vc = '';
+  if (total >= 85) { verdict = 'Sangat Kompetitif'; vc = 'color:var(--accent)'; }
+  else if (total >= 70) { verdict = 'Kompetitif'; vc = 'color:var(--blue)'; }
+  else if (total >= 55) { verdict = 'Cukup Kompetitif'; vc = 'color:var(--amber)'; }
+  else { verdict = 'Perlu Pertimbangan Alternatif'; vc = 'color:var(--red)'; }
+  document.getElementById('S-verdict').textContent = verdict;
+  document.getElementById('S-verdict').style.cssText = vc;
+
+  document.getElementById('S-breakdown').innerHTML = [
+    ['Gabungan Rapor + TKA', gabunganAkhir.toFixed(2), (b.rapor * 100).toFixed(0) + '%', k1.toFixed(2)],
+    ['Persentil Rapor', skorPersentil, (b.persentil * 100).toFixed(0) + '%', k2.toFixed(2)],
+    [`Prestasi Jalur ${jalur === 'akademik' ? 'Akademik' : 'Nonakademik'}`, skorPrestasi, (pbP * 100).toFixed(0) + '%', k3.toFixed(2)],
+    ['Kriteria Kepemimpinan', skorPemimpin, (b.p * 100).toFixed(0) + '%', k4.toFixed(2)]
+  ].map(r => `<tr><td>${r[0]}</td><td class="r">${r[1]}</td><td class="r">${r[2]}</td><td class="r">${r[3]}</td></tr>`).join('') +
+  `<tr><td colspan="3">Total Skor Akhir Indeks Prestasi</td><td class="r">${total.toFixed(1)}</td></tr>`;
+}
+
+// Jalankan Setup Awal Saat Aplikasi Dimuat
+buildRaporTable();
+switchRPMethod();
+togglePrestasi();
+</script>
+</body>
+</html>
