@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kalkulator Indeks Prestasi PMB DKI Jakarta 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #f5f4f0;
@@ -25,295 +25,324 @@
   --amber-bg: #fdf3e3;
   --amber-text: #4d2f08;
   --red: #7a1a1a;
-  --red-bg: #f9ebeb;
-  --radius: 8px;
+  --red-bg: #fce8e8;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding: 2rem 1rem; }
-.container { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 2rem; }
-@media (min-width: 768px) { .container { grid-template-columns: 1.3fr 1fr; } }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; min-height: 100vh; }
+.page { max-width: 780px; margin: 0 auto; padding: 32px 20px 64px; }
+.header { margin-bottom: 28px; }
+.header h1 { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.header p { font-size: 13px; color: var(--text2); }
+.header .badge-ref { display: inline-block; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; font-size: 11px; color: var(--text2); font-family: 'DM Mono', monospace; margin-top: 6px; }
 
-header { grid-column: 1 / -1; text-align: center; margin-bottom: 1rem; }
-header h1 { font-size: 1.8rem; font-weight: 700; color: var(--blue); margin-bottom: 0.5rem; }
-header p { color: var(--text2); font-size: 0.95rem; }
+.controls { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
+.seg { display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.seg button { padding: 8px 16px; border: none; background: transparent; font-family: inherit; font-size: 13px; font-weight: 500; color: var(--text2); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.seg button.on { background: var(--text); color: #fff; }
+.seg button:not(:last-child) { border-right: 1px solid var(--border); }
 
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; }
-.card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between; }
-.step-badge { background: var(--text); color: #fff; font-family: 'DM Mono', monospace; font-size: 0.8rem; padding: 0.2rem 0.6rem; border-radius: 20px; }
+.mode-tabs { display: flex; gap: 2px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 20px; }
+.mode-tab { flex: 1; padding: 10px 16px; border: none; background: transparent; font-family: inherit; font-size: 13px; font-weight: 500; color: var(--text2); cursor: pointer; transition: all 0.15s; text-align: center; }
+.mode-tab.on { background: var(--accent); color: #fff; }
 
-.form-group { margin-bottom: 1.2rem; }
-label { display: block; font-weight: 500; font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--text); }
-select, input { width: 100%; padding: 0.6rem; border: 1px solid var(--border2); border-radius: var(--radius); font-family: inherit; font-size: 0.95rem; color: var(--text); background: var(--surface); }
-select:focus, input:focus { outline: 2px solid var(--blue); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 12px; overflow: hidden; }
+.card-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px 12px; border-bottom: 1px solid var(--border); }
+.step-badge { width: 24px; height: 24px; border-radius: 50%; background: var(--text); color: #fff; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'DM Mono', monospace; }
+.card-title { font-size: 14px; font-weight: 600; flex: 1; }
+.pill { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+.pill-blue { background: var(--blue-bg); color: var(--blue-text); }
+.card-body { padding: 14px 16px; }
+.card-note { background: var(--surface2); border-top: 1px solid var(--border); padding: 10px 16px; font-size: 12px; color: var(--text2); line-height: 1.5; }
+.card-note b { color: var(--text); font-family: 'DM Mono', monospace; }
+.card-note a { color: var(--accent); text-decoration: none; font-weight: 500; }
 
-.radio-group { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
-.radio-btn { border: 1px solid var(--border2); border-radius: var(--radius); padding: 0.6rem; text-align: center; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: all 0.2s; }
-.radio-btn.active { background: var(--blue-bg); border-color: var(--blue); color: var(--blue-text); }
+.field { margin-bottom: 10px; }
+.field label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+.field input, .field select { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 13px; background: var(--surface); color: var(--text); transition: border-color 0.15s; }
+.field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
+.field-row { display: flex; gap: 8px; }
+.field-row .field { flex: 1; }
+.field-inline { display: flex; align-items: center; gap: 8px; }
+.field-inline input { flex: 1; max-width: 100px; }
+.field-inline span { font-size: 12px; color: var(--text3); white-space: nowrap; }
 
-.grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
-@media (max-width: 480px) { .grid-2col { grid-template-columns: 1fr; } }
+.ind-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-.badge-info { display: inline-block; background: var(--surface2); padding: 0.4rem 0.8rem; border-radius: var(--radius); font-size: 0.85rem; font-weight: 600; margin-top: 0.5rem; }
+.tbl-wrap { overflow-x: auto; margin-bottom: 0; }
+table.rapor { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 12px; }
+table.rapor th { background: var(--surface2); padding: 6px 8px; border: 1px solid var(--border); color: var(--text2); font-weight: 500; white-space: nowrap; text-align: center; }
+table.rapor th.lft { text-align: left; }
+table.rapor td { padding: 4px 6px; border: 1px solid var(--border); text-align: center; }
+table.rapor td.lft { text-align: left; font-weight: 500; color: var(--text); background: var(--surface2); white-space: nowrap; }
+table.rapor td.avg { background: var(--accent-bg); color: var(--accent-text); font-weight: 600; font-family: 'DM Mono', monospace; font-size: 12px; }
+table.rapor tr.sem-avg td { background: var(--blue-bg); color: var(--blue-text); font-weight: 600; font-family: 'DM Mono', monospace; }
+table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--border2); border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 12px; text-align: center; background: var(--surface); color: var(--text); }
+table.rapor input:focus { outline: none; border-color: var(--accent); background: var(--accent-bg); }
 
-.result-box { text-align: center; padding: 1.5rem; background: var(--surface2); border-radius: var(--radius); margin-bottom: 1.5rem; }
-.score-big { font-family: 'DM Mono', monospace; font-size: 3.5rem; font-weight: 700; color: var(--text); margin: 0.5rem 0; }
-.verdict { font-weight: 700; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.summary { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-top: 20px; }
+.summary-head { background: var(--text); color: #fff; padding: 14px 16px; font-size: 14px; font-weight: 600; }
+.summary-body { padding: 16px; }
+.metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 16px; }
+.metric { background: var(--surface2); border-radius: var(--radius-sm); padding: 12px 14px; }
+.metric .lbl { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+.metric .val { font-size: 22px; font-weight: 600; color: var(--text); font-family: 'DM Mono', monospace; }
+.total-display { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.total-num { font-size: 48px; font-weight: 600; color: var(--accent); font-family: 'DM Mono', monospace; line-height: 1; }
+.total-side .verdict { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+.total-side .sub { font-size: 12px; color: var(--text2); }
+.progress { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 14px; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.5s ease; }
+.breakdown { width: 100%; border-collapse: collapse; font-size: 12px; }
+.breakdown th { text-align: left; color: var(--text3); font-weight: 500; padding: 5px 8px; border-bottom: 1px solid var(--border); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+.breakdown th.r { text-align: right; }
+.breakdown td { padding: 6px 8px; border-bottom: 1px solid var(--border); color: var(--text); }
+.breakdown td.r { text-align: right; font-family: 'DM Mono', monospace; font-size: 12px; }
+.breakdown tr:last-child td { border-bottom: none; background: var(--surface2); font-weight: 600; }
+.disclaimer { font-size: 11px; color: var(--text3); background: var(--surface2); border-radius: var(--radius-sm); padding: 8px 12px; margin-top: 12px; line-height: 1.5; }
 
-.progress-container { background: var(--border); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 0.8rem; }
-.progress-bar { height: 100%; width: 0%; background: var(--blue); transition: width 0.3s ease; }
-
-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 1rem; }
-th, td { text-align: left; padding: 0.6rem; border-bottom: 1px solid var(--border); }
-th { color: var(--text2); font-weight: 500; }
-td.mono { font-family: 'DM Mono', monospace; text-align: right; }
-
-.disclaimer { font-size: 0.8rem; color: var(--text3); margin-top: 1.5rem; line-height: 1.4; text-align: justify; }
+.panel { display: none; }
+.panel.active { display: block; }
 .hidden { display: none !important; }
 </style>
 </head>
 <body>
+<div class="page">
 
-<header>
+<div class="header">
   <h1>🎓 Kalkulator Indeks Prestasi PMB DKI Jakarta 2026</h1>
-  <p>Formulasi Berdasarkan SK Kadisdik No. 261 & 262 Tahun 2026</p>
-</header>
+  <p>Hitung estimasi indeks prestasi untuk seleksi jalur prestasi akademik & nonakademik.</p>
+  <span class="badge-ref">SK Kadisdik No. 261 & 262 Tahun 2026</span>
+</div>
 
-<div class="container">
-  
-  <div>
-    <div class="card">
-      <div class="card-title">Konfigurasi Jalur & Jenjang</div>
-      <div class="form-group">
-        <label>Jenjang Tujuan</label>
-        <div class="radio-group" id="jenjang-group">
-          <div class="radio-btn active" data-value="smp">Masuk SMP</div>
-          <div class="radio-btn" data-value="sma">Masuk SMA/SMK</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Jalur PPDB</label>
-        <div class="radio-group" id="jalur-group">
-          <div class="radio-btn active" data-value="akademik">Prestasi Akademik</div>
-          <div class="radio-btn" data-value="nonakademik">Prestasi Non-Akademik</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Metode Input Nilai Rapor</label>
-        <div class="radio-group" id="mode-group">
-          <div class="radio-btn active" data-value="ringkas">⚡ Rerata Langsung</div>
-          <div class="radio-btn" data-value="lengkap">📋 Per Mata Pelajaran</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">
-        <span>Langkah 1: Rapor Pendidikan Sekolah Asal</span>
-        <span class="step-badge">Mutu Sekolah</span>
-      </div>
-      <p style="font-size: 0.8rem; color: var(--text2); margin-bottom: 1rem;">Masukkan predikat indikator mutu sekolah asal Anda (bisa dicek di raporpendidikan.kemdikbud.go.id)</p>
-      
-      <div class="grid-2col">
-        <div class="form-group">
-          <label>1. Kemampuan Literasi</label>
-          <select class="inp-rp" id="rp-l1"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select>
-        </div>
-        <div class="form-group">
-          <label>2. Kemampuan Numerasi</label>
-          <select class="inp-rp" id="rp-l2"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select>
-        </div>
-        <div class="form-group">
-          <label>3. Karakter Murid</label>
-          <select class="inp-rp" id="rp-l3"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select>
-        </div>
-        <div class="form-group">
-          <label>4. Kebhinekaan Sekolah</label>
-          <select class="inp-rp" id="rp-l4"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select>
-        </div>
-        <div class="form-group">
-          <label>5. Keamanan Sekolah</label>
-          <select class="inp-rp" id="rp-l5"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select>
-        </div>
-        <div class="form-group">
-          <label>6. Kualitas Pembelajaran</label>
-          <select class="inp-rp" id="rp-l6"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select>
-        </div>
-      </div>
-      <div class="badge-info">
-        Rerata Mutu: <span id="lbl-rp-skor">0.0</span> | Predikat Sekolah: <span id="lbl-rp-predikat">-</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">
-        <span>Langkah 2: Persentil Peringkat Rapor Anda</span>
-        <span class="step-badge">Bobot 20% / 5%</span>
-      </div>
-      <div class="form-group">
-        <label>Pilih Posisi Persentil Peringkat Anda di Sekolah Asal</label>
-        <select id="inp-persentil-select">
-          </select>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">
-        <span>Langkah 3: Nilai Akademik Rapor & TKA</span>
-        <span class="step-badge">Bobot 40% / 20%</span>
-      </div>
-      
-      <div id="box-ringkas">
-        <div class="form-group">
-          <label>Rerata Nilai Rapor 5 Semester (Skor Gabungan)</label>
-          <input type="number" id="inp-rapor-rerata" min="0" max="100" step="0.01" value="85.00">
-        </div>
-      </div>
-
-      <div id="box-lengkap" class="hidden">
-        <div class="form-group">
-          <label>Nilai Rapor Per Mata Pelajaran:</label>
-          <div class="grid-2col" id="wrapper-mapel"></div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Nilai Tes Kemampuan Akademik (TKA) Nasional</label>
-        <input type="number" id="inp-tka" min="0" max="100" step="0.01" value="80.00">
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">
-        <span>Langkah 4: Prestasi Kejuaraan / Perlombaan</span>
-        <span class="step-badge">Bobot 25% / 50%</span>
-      </div>
-      <div class="form-group">
-        <label>Penyelenggara & Jenis Sertifikat Kejuaraan</label>
-        <select id="inp-penyelenggara">
-          <option value="tidak">Tidak ada prestasi kejuaraan</option>
-          <option value="kedinasan-b">Kedinasan — Berjenjang</option>
-          <option value="kedinasan-tb">Kedinasan — Tidak Berjenjang</option>
-          <option value="induk-b">Induk Organisasi — Berjenjang</option>
-          <option value="induk-tb">Induk Organisasi — Tidak Berjenjang</option>
-          <option value="kurasi-rek">Hasil Kurasi (Rekomendasi)</option>
-          <option value="kurasi-pef">Hasil Kurasi (Pemasalan / Ekshibisi / Festival)</option>
-        </select>
-      </div>
-      <div class="grid-2col id-kejuaraan-detail">
-        <div class="form-group">
-          <label>Tingkat Kejuaraan</label>
-          <select id="inp-tingkat">
-            <option value="int">Internasional</option>
-            <option value="nas">Nasional</option>
-            <option value="prov">Provinsi</option>
-            <option value="kab" selected>Kota/Kabupaten</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Peringkat Juara</label>
-          <select id="inp-juara">
-            <option value="0">Juara 1</option>
-            <option value="1">Juara 2</option>
-            <option value="2">Juara 3</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">
-        <span>Langkah 5: Pengalaman Organisasi & Kepemimpinan</span>
-        <span class="step-badge">Bobot 15% / 25%</span>
-      </div>
-      <div class="form-group">
-        <label>Jabatan di OSIS / MPK (Sub-bobot 40%)</label>
-        <select id="inp-osis">
-          <option value="0">Tidak ada pengurus</option>
-          <option value="100">Ketua OSIS / MPK</option>
-          <option value="67">Pengurus Harian (Wakil, Sekretaris, Bendahara)</option>
-          <option value="33">Ketua Seksi / Anggota Seksi</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Jabatan di Ekstrakurikuler Sekolah (Sub-bobot 20%)</label>
-        <select id="inp-ekskul">
-          <option value="0">Tidak ada pengurus</option>
-          <option value="100">Ketua Ekstrakurikuler</option>
-          <option value="67">Pengurus Ekstrakurikuler</option>
-          <option value="33">Koordinator Lapangan / Seksi</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Sertifikat Seleksi Ketat / Keahlian Khusus (Sub-bobot 40%)</label>
-        <select id="inp-ketat">
-          <option value="0">Tidak Ada</option>
-          <option value="100">Pramuka Garuda / Hafiz Quran / Paskibra - Internasional</option>
-          <option value="81">Pramuka Garuda / Hafiz Quran / Paskibra - Nasional</option>
-          <option value="62">Pramuka Garuda / Hafiz Quran / Paskibra - Provinsi</option>
-          <option value="43">Pramuka Garuda / Hafiz Quran / Paskibra - Kota/Kabupaten</option>
-        </select>
-      </div>
-    </div>
+<div class="card" style="margin-bottom: 20px;">
+  <div class="card-head">
+    <div class="step-badge">⚙️</div>
+    <div class="card-title">Metode Penentuan Rapor Pendidikan Sekolah Asal</div>
   </div>
-
-  <div>
-    <div class="card" style="position: sticky; top: 1rem;">
-      <div class="card-title">Hasil Analisis Skor Akhir</div>
-      
-      <div class="result-box">
-        <div style="font-size:0.85rem; color:var(--text2); font-weight:700;" id="S-jalur">PRESTASI AKADEMIK - SMP</div>
-        <div class="score-big" id="S-total">0.00</div>
-        <div class="verdict" id="S-verdict">-</div>
-        <div class="progress-container">
-          <div class="progress-bar" id="S-bar"></div>
-        </div>
-      </div>
-
-      <div style="font-weight:600; font-size:0.9rem; margin-bottom:0.5rem;">Breakdown Distribusi Nilai Resmi:</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Komponen</th>
-            <th>Raw Skor</th>
-            <th>Bobot</th>
-            <th style="text-align:right">Kontribusi</th>
-          </tr>
-        </thead>
-        <tbody id="S-breakdown">
-          </tbody>
-      </table>
-
-      <div class="disclaimer">
-        ⚠️ <strong>Catatan Penting:</strong> Persentil rapor dikunci berdasarkan hasil kalkulasi Rapor Pendidikan Sekolah Asal sesuai SK Disdik No. 261/2026. Data dihitung real-time di sisi browser Anda tanpa pengumpulan data eksternal.
-      </div>
+  <div class="card-body">
+    <div class="field">
+      <label>Bagaimana Anda ingin menentukan kualitas Rapor Pendidikan sekolah asal?</label>
+      <select id="rp-method-select" onchange="switchRPMethod()">
+        <option value="direct">Saya Sudah Tahu Predikat Akhirnya (Langsung Pilih)</option>
+        <option value="manual">Hitung Manual Berdasarkan 6 Indikator Mutu</option>
+      </select>
     </div>
   </div>
 </div>
 
+<div class="controls">
+  <div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px">Jenjang Tujuan</div>
+    <div class="seg" id="seg-jenjang">
+      <button class="on" onclick="setJenjang('smp',this)">Masuk SMP</button>
+      <button onclick="setJenjang('sma',this)">Masuk SMA/SMK</button>
+    </div>
+  </div>
+  <div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px">Jalur Prestasi</div>
+    <div class="seg" id="seg-jalur">
+      <button class="on" onclick="setJalur('akademik',this)">Akademik</button>
+      <button onclick="setJalur('nonakademik',this)">Nonakademik</button>
+    </div>
+  </div>
+</div>
+
+<div class="mode-tabs">
+  <button class="mode-tab on" onclick="setMode('lengkap',this)">📋 Input Lengkap (per Mapel & Semester)</button>
+  <button class="mode-tab" onclick="setMode('ringkas',this)">⚡ Input Ringkas (langsung rerata)</button>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="step-badge">1</div>
+    <div class="card-title">Rapor Pendidikan Sekolah Asal</div>
+  </div>
+  
+  <div class="card-body" id="rp-box-direct">
+    <div class="field">
+      <label>Pilih predikat akhir Rapor Pendidikan sekolah asal</label>
+      <select id="rp-direct-select" onchange="calc()">
+        <option value="baik">Baik (Rerata nilai akhir 78–100)</option>
+        <option value="sedang" selected>Sedang (Rerata nilai akhir 55–77)</option>
+        <option value="kurang">Kurang (Rerata nilai akhir 33–54)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card-body hidden" id="rp-box-manual">
+    <div class="ind-grid">
+      <div class="field"><label>1. Kemampuan Literasi Murid</label><select id="ind1" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
+      <div class="field"><label>2. Kemampuan Numerasi Murid</label><select id="ind2" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
+      <div class="field"><label>3. Karakter Murid</label><select id="ind3" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
+      <div class="field"><label>4. Kondisi Kebhinekaan Sekolah</label><select id="ind4" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
+      <div class="field"><label>5. Kondisi Keamanan Sekolah</label><select id="ind5" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
+      <div class="field"><label>6. Kualitas Pembelajaran</label><select id="ind6" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
+    </div>
+  </div>
+  <div class="card-note">Nilai Rapor Pendidikan Sekolah = <b id="rp-nilai-display">67.0</b> → Predikat Akhir: <b id="rp-predikat-display">Sedang</b><br>Data resmi milik sekolah dapat dicek di <a href="https://raporpendidikan.kemdikbud.go.id" target="_blank">raporpendidikan.kemdikbud.go.id</a></div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="step-badge">2</div>
+    <div class="card-title">Persentil Nilai Rapor Siswa</div>
+    <span class="pill pill-blue" id="b-persentil">Bobot: 20%</span>
+  </div>
+  <div class="card-body">
+    <div class="field-row">
+      <div class="field">
+        <label>Peringkat Anda di Angkatan</label>
+        <div class="field-inline"><input type="number" id="inp-peringkat" min="1" max="2000" value="20" oninput="calc()"><span>urutan ke-</span></div>
+      </div>
+      <div class="field">
+        <label>Total Siswa Satu Angkatan</label>
+        <div class="field-inline"><input type="number" id="inp-total-siswa" min="1" max="2000" value="200" oninput="calc()"><span>orang</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card-note">Persentil = peringkat ÷ total × 100 = <b id="persentil-angka">–</b>% → Tier: <b id="persentil-tier">–</b> → Skor Utama: <b id="persentil-skor">–</b><br><span id="persentil-desc" style="font-size:11px; color:var(--text3)"></span></div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="step-badge">3</div>
+    <div class="card-title" id="card-rapor-title">Nilai Rapor Akademik & Tes Kemandirian (TKA)</div>
+    <span class="pill pill-blue" id="b-rapor">Bobot: 40%</span>
+  </div>
+
+  <div class="card-body" id="box-lengkap">
+    <div style="font-size:12px;color:var(--text2);margin-bottom:10px" id="mapel-desc"></div>
+    <div class="tbl-wrap">
+      <table class="rapor" id="rapor-tbl"></table>
+    </div>
+  </div>
+
+  <div class="card-body hidden" id="box-ringkas">
+    <div class="field">
+      <label id="lbl-ringkas-desc">Masukkan nilai rerata gabungan 5 semester</label>
+      <input type="number" id="inp-rapor-ringkas" min="0" max="100" step="0.01" value="85" oninput="calc()">
+    </div>
+  </div>
+
+  <div class="card-note" style="background: var(--surface); border-top: 1px solid var(--border); padding: 14px 16px;">
+    <div class="field-row">
+      <div class="field"><label>TKA Bahasa Indonesia</label><input type="number" id="tka-bi" min="0" max="100" step="0.01" value="80" oninput="calc()"></div>
+      <div class="field"><label>TKA Matematika</label><input type="number" id="tka-mat" min="0" max="100" step="0.01" value="80" oninput="calc()"></div>
+    </div>
+  </div>
+  <div class="card-note">Rerata Rapor = <b id="lbl-rerata-rapor">–</b> | Rerata TKA = <b id="lbl-rerata-tka">–</b><br>Formulasi Akhir: (70% × Rapor) + (30% × TKA) = <b id="lbl-gabungan">–</b></div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="step-badge">4</div>
+    <div class="card-title">Sertifikat Prestasi / Kejuaraan</div>
+    <span class="pill pill-blue" id="b-prestasi">Bobot: 25%</span>
+  </div>
+  <div class="card-body">
+    <div class="field"><label>Lembaga Penyelenggara</label>
+      <select id="inp-penyelenggara" onchange="togglePrestasi()">
+        <option value="kedinasan-b">Kedinasan — Berjenjang</option>
+        <option value="kedinasan-tb">Kedinasan — Tidak Berjenjang</option>
+        <option value="induk-b">Induk Organisasi — Berjenjang</option>
+        <option value="induk-tb">Induk Organisasi — Tidak Berjenjang</option>
+        <option value="kurasi-rek">Hasil Kurasi (Rekomendasi)</option>
+        <option value="kurasi-pef">Hasil Kurasi (Pemasalan/Ekshibisi/Festival)</option>
+        <option value="tidak">Tidak ada prestasi kejuaraan</option>
+      </select>
+    </div>
+    <div id="row-tingkat" class="field"><label>Tingkat Wilayah</label>
+      <select id="inp-tingkat" onchange="calc()"><option value="int">Internasional</option><option value="nas">Nasional</option><option value="prov">Provinsi</option><option value="kab" selected>Kota/Kabupaten</option></select>
+    </div>
+    <div id="row-juara" class="field"><label>Peringkat Capaian</label>
+      <select id="inp-juara" onchange="calc()"><option value="0">Juara 1</option><option value="1">Juara 2</option><option value="2">Juara 3</option></select>
+    </div>
+  </div>
+  <div class="card-note" id="box-prestasi-note">Sertifikat valid.</div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="step-badge">5</div>
+    <div class="card-title">Pengalaman Organisasi &amp; Kepemimpinan</div>
+    <span class="pill pill-blue" id="b-kepemimpinan">Bobot: 10%</span>
+  </div>
+  <div class="card-body">
+    <div class="field"><label>Struktur Kepengurusan OSIS / MPK (Bobot Unsur: 40%)</label>
+      <select id="inp-osis" onchange="calc()"><option value="0">Tidak ada pengurus</option><option value="100">Ketua</option><option value="67">Pengurus Harian (Wakil/Sekretaris/Bendahara)</option><option value="33">Ketua Seksi / Anggota Seksi</option></select>
+    </div>
+    <div class="field"><label>Struktur Kepengurusan Ekstrakurikuler (Bobot Unsur: 20%)</label>
+      <select id="inp-ekskul" onchange="calc()"><option value="0">Tidak ada pengurus</option><option value="100">Ketua Ekstrakurikuler</option><option value="67">Pengurus Inti</option><option value="33">Koordinator Seksi / Lapangan</option></select>
+    </div>
+    <div class="field"><label>Sertifikasi Seleksi Ketat — Garuda/Jumbara/Paskibra/Hafiz (Bobot Unsur: 40%)</label>
+      <select id="inp-seleksi" onchange="calc()"><option value="0">Tidak ada</option><option value="100">Tingkat Internasional / Hafiz 28-30 Juz</option><option value="81">Tingkat Nasional / Hafiz 19-21 Juz</option><option value="62">Tingkat Provinsi / Hafiz 11-12 Juz</option><option value="43">Tingkat Kota-Kabupaten / Hafiz 7-8 Juz</option></select>
+    </div>
+  </div>
+  <div class="card-note">Skor Indeks Kepemimpinan = (40% × OSIS) + (20% × Ekskul) + (40% × Seleksi) = <b id="skor-pemimpin-display">–</b></div>
+</div>
+
+<div class="summary">
+  <div class="summary-head">📊 Hasil Perhitungan Indeks Prestasi Akhir</div>
+  <div class="summary-body">
+    <div class="metric-grid">
+      <div class="metric"><div class="lbl">Rapor + TKA</div><div class="val" id="S-rapor">–</div></div>
+      <div class="metric"><div class="lbl">Skor Persentil</div><div class="val" id="S-persentil">–</div></div>
+      <div class="metric"><div class="lbl">Skor Prestasi</div><div class="val" id="S-prestasi">–</div></div>
+      <div class="metric"><div class="lbl">Skor Kepemimpinan</div><div class="val" id="S-kepemimpinan">–</div></div>
+    </div>
+    <div class="total-display">
+      <div class="total-num" id="S-total">–</div>
+      <div class="total-side">
+        <div class="verdict" id="S-verdict">–</div>
+        <div class="sub" id="S-jalur">–</div>
+      </div>
+    </div>
+    <div class="progress"><div class="progress-fill" id="S-bar" style="width:0%"></div></div>
+    <table class="breakdown">
+      <thead><tr><th>Komponen Pembentuk Indeks</th><th class="r">Raw Skor</th><th class="r">Bobot</th><th class="r">Kontribusi Nilai</th></tr></thead>
+      <tbody id="S-breakdown"></tbody>
+    </table>
+    <div class="disclaimer">⚠️ <b>Estimasi Mandiri:</b> Perhitungan dilakukan secara lokal di browser Anda. Nilai persentil murni mutlak ditentukan oleh SIDANIRA berdasarkan sebaran riil nilai siswa se-DKI Jakarta. Cut-off prestasi 31 Maret 2026.</div>
+  </div>
+</div>
+
+</div>
+
 <script>
-// Konfigurasi Mutu Mapel
-const MAPEL_CONFIG = {
-  smp: [
-    { id: 'pancasila', nama: 'Pendidikan Pancasila / PKn' },
-    { id: 'ind', nama: 'Bahasa Indonesia' },
-    { id: 'mat', nama: 'Matematika' },
-    { id: 'ipa', nama: 'IPA / IPAS' }
-  ],
-  sma: [
-    { id: 'pancasila', nama: 'Pendidikan Pancasila' },
-    { id: 'ind', nama: 'Bahasa Indonesia' },
-    { id: 'mat', nama: 'Matematika' },
-    { id: 'ipa', nama: 'IPA' },
-    { id: 'ips', nama: 'IPS' },
-    { id: 'ing', nama: 'Bahasa Inggris' }
-  ]
+// State Management Global
+let jenjang = 'smp';
+let jalur = 'akademik';
+let mode = 'lengkap';
+let rpMethod = 'direct'; // 'direct' atau 'manual'
+let rpPredikatFinal = 'sedang';
+
+// Konfigurasi Peta Mata Pelajaran & Semester Dinamis Sesuai Aturan 2026
+const MAPEL_DATA = {
+  smp: {
+    names: ['Pendidikan Pancasila / PKn', 'Bahasa Indonesia', 'Matematika', 'IPA / IPAS'],
+    sems: ['Kls 4 Sem 1', 'Kls 4 Sem 2', 'Kls 5 Sem 1', 'Kls 5 Sem 2', 'Kls 6 Sem 1']
+  },
+  sma: {
+    names: ['Pendidikan Pancasila', 'Bahasa Indonesia', 'Matematika', 'IPA', 'IPS', 'Bahasa Inggris'],
+    sems: ['Kls 7 Sem 1', 'Kls 7 Sem 2', 'Kls 8 Sem 1', 'Kls 8 Sem 2', 'Kls 9 Sem 1']
+  }
 };
 
-// Tabel Skor Kejuaraan Resmi (SK Kadisdik 261 Halaman 25)
-const SKJ_MATRIX = {
+const BOBOT = {
+  smp: {
+    akademik: { rapor: 0.40, persentil: 0.20, pA: 0.25, pN: 0.05, p: 0.10 },
+    nonakademik: { rapor: 0.20, persentil: 0.05, pA: 0.05, pN: 0.50, p: 0.20 }
+  },
+  sma: {
+    akademik: { rapor: 0.40, persentil: 0.20, pA: 0.25, pN: 0.05, p: 0.10 },
+    nonakademik: { rapor: 0.20, persentil: 0.05, pA: 0.05, pN: 0.50, p: 0.20 }
+  }
+};
+
+const SKJ = {
   'kedinasan-b': { int: [100, 97, 94], nas: [91, 88, 85], prov: [82, 79, 76], kab: [73, 70, 67] },
   'kedinasan-tb': { int: [92, 89, 86], nas: [83, 80, 77], prov: [74, 71, 68], kab: [65, 62, 59] },
   'induk-b': { int: [92, 89, 86], nas: [83, 80, 77], prov: [74, 71, 68], kab: [65, 62, 59] },
@@ -322,234 +351,191 @@ const SKJ_MATRIX = {
   'kurasi-pef': { int: [68, 65, 62], nas: [59, 56, 53], prov: [50, 47, 44], kab: [41, 38, 35] }
 };
 
-// Matriks Opsi Persentil Sesuai Hasil Rapor Mutu Sekolah
-const PERSENTIL_OPTIONS = {
-  baik: [
-    { label: "Peringkat Terbaik 1% - 15% (Skor 100)", val: 100 },
-    { label: "Peringkat 16% - 30% (Skor 90)", val: 90 },
-    { label: "Peringkat 31% - 45% (Skor 80)", val: 80 },
-    { label: "Peringkat 46% - 60% (Skor 70)", val: 70 },
-    { label: "Peringkat Bawah >60% (Skor 60)", val: 60 }
-  ],
-  sedang: [
-    { label: "Peringkat Terbaik 1% - 10% (Skor 100)", val: 100 },
-    { label: "Peringkat 11% - 20% (Skor 90)", val: 90 },
-    { label: "Peringkat 21% - 30% (Skor 80)", val: 80 },
-    { label: "Peringkat 31% - 40% (Skor 70)", val: 70 },
-    { label: "Peringkat Bawah >40% (Skor 60)", val: 60 }
-  ],
-  kurang: [
-    { label: "Peringkat Terbaik 1% - 5% (Skor 100)", val: 100 },
-    { label: "Peringkat 6% - 10% (Skor 90)", val: 90 },
-    { label: "Peringkat 11% - 15% (Skor 80)", val: 80 },
-    { label: "Peringkat 16% - 20% (Skor 70)", val: 70 },
-    { label: "Peringkat Bawah >20% (Skor 60)", val: 60 }
-  ]
+const TIER = {
+  baik: [{ max: 15, s: 100, t: '1–15%' }, { max: 30, s: 90, t: '16–30%' }, { max: 45, s: 80, t: '31–45%' }, { max: 60, s: 70, t: '46–60%' }, { max: 100, s: 60, t: '>60%' }],
+  sedang: [{ max: 10, s: 100, t: '1–10%' }, { max: 20, s: 90, t: '11–20%' }, { max: 30, s: 80, t: '21–30%' }, { max: 40, s: 70, t: '31–40%' }, { max: 100, s: 60, t: '>40%' }],
+  kurang: [{ max: 5, s: 100, t: '1–5%' }, { max: 10, s: 90, t: '6–10%' }, { max: 15, s: 80, t: '11–15%' }, { max: 20, s: 70, t: '16–20%' }, { max: 100, s: 60, t: '>20%' }]
 };
 
-// State Global
-let currentJenjang = 'smp';
-let currentJalur = 'akademik';
-let currentMode = 'ringkas';
-let currentPredikatSekolah = 'sedang';
+const TIER_DESC = {
+  baik: 'Aturan Tier Sekolah (BAIK): 1–15% = 100 · 16–30% = 90 · 31–45% = 80 · 46–60% = 70 · >60% = 60',
+  sedang: 'Aturan Tier Sekolah (SEDANG): 1–10% = 100 · 11–20% = 90 · 21–30% = 80 · 31–40% = 70 · >40% = 60',
+  kurang: 'Aturan Tier Sekolah (KURANG): 1–5% = 100 · 6–10% = 90 · 11–15% = 80 · 16–20% = 70 · >20% = 60'
+};
 
-document.addEventListener('DOMContentLoaded', () => {
-  setupRadioGroups();
-  renderMapelInputs();
-  updateRaporPendidikan();
+const PJLABEL = {
+  'kedinasan-b': 'Kedinasan Berjenjang', 'kedinasan-tb': 'Kedinasan Tidak Berjenjang',
+  'induk-b': 'Induk Org. Berjenjang', 'induk-tb': 'Induk Org. Tidak Berjenjang',
+  'kurasi-rek': 'Kurasi-Rekomendasi', 'kurasi-pef': 'Kurasi-Pemasalan/Eks/Fest'
+};
 
-  // Bind listener perubahan Rapor Pendidikan (Langkah 1)
-  document.querySelectorAll('.inp-rp').forEach(sel => {
-    sel.addEventListener('change', updateRaporPendidikan);
-  });
-
-  // Bind listener input lainnya
-  document.getElementById('inp-rapor-rerata').addEventListener('input', calculateAll);
-  document.getElementById('inp-tka').addEventListener('input', calculateAll);
-  document.getElementById('inp-persentil-select').addEventListener('change', calculateAll);
-  document.getElementById('inp-penyelenggara').addEventListener('change', handleKejuaraanVisibility);
-  document.getElementById('inp-tingkat').addEventListener('change', calculateAll);
-  document.getElementById('inp-juara').addEventListener('change', calculateAll);
-  document.getElementById('inp-osis').addEventListener('change', calculateAll);
-  document.getElementById('inp-ekskul').addEventListener('change', calculateAll);
-  document.getElementById('inp-ketat').addEventListener('change', calculateAll);
-});
-
-function setupRadioGroups() {
-  const configureRadio = (groupId, callback) => {
-    const el = document.getElementById(groupId);
-    el.querySelectorAll('.radio-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        el.querySelectorAll('.radio-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        callback(btn.dataset.value);
-      });
-    });
-  };
-
-  configureRadio('jenjang-group', val => { currentJenjang = val; renderMapelInputs(); calculateAll(); });
-  configureRadio('jalur-group', val => { currentJalur = val; calculateAll(); });
-  configureRadio('mode-group', val => {
-    currentMode = val;
-    document.getElementById('box-lengkap').classList.toggle('hidden', val !== 'lengkap');
-    document.getElementById('box-ringkas').classList.toggle('hidden', val === 'lengkap');
-    calculateAll();
-  });
-}
-
-function renderMapelInputs() {
-  const container = document.getElementById('wrapper-mapel');
-  container.innerHTML = '';
-  MAPEL_CONFIG[currentJenjang].forEach(m => {
-    const div = document.createElement('div');
-    div.className = 'form-group';
-    div.innerHTML = `
-      <label style="font-size:0.8rem; color:var(--text2);">${m.nama}</label>
-      <input type="number" class="inp-mapel-item" data-id="${m.id}" min="0" max="100" step="0.01" value="85.00">
-    `;
-    container.appendChild(div);
-    div.querySelector('input').addEventListener('input', calculateAll);
-  });
-}
-
-function updateRaporPendidikan() {
-  let totalSkor = 0;
-  const selectors = document.querySelectorAll('.inp-rp');
-  selectors.forEach(sel => totalSkor += parseFloat(sel.value));
+function switchRPMethod() {
+  rpMethod = document.getElementById('rp-method-select').value;
+  document.getElementById('rp-box-direct').classList.toggle('hidden', rpMethod !== 'direct');
+  document.getElementById('rp-box-manual').classList.toggle('hidden', rpMethod !== 'manual');
   
-  let rerata = totalSkor / selectors.length;
-  
-  // Tentukan predikat berdasarkan rentang nilai resmi
-  if (rerata >= 78) currentPredikatSekolah = 'baik';
-  else if (rerata >= 55) currentPredikatSekolah = 'sedang';
-  else currentPredikatSekolah = 'kurang';
-
-  document.getElementById('lbl-rp-skor').textContent = rerata.toFixed(1);
-  document.getElementById('lbl-rp-predikat').textContent = currentPredikatSekolah.toUpperCase();
-
-  // Update dropdown pilihan persentil di Langkah 2 secara dinamis
-  const pSelect = document.getElementById('inp-persentil-select');
-  const simpanPilihanLama = pSelect.value;
-  pSelect.innerHTML = '';
-
-  PERSENTIL_OPTIONS[currentPredikatSekolah].forEach(opt => {
-    const node = document.createElement('option');
-    node.value = opt.val;
-    node.textContent = opt.label;
-    pSelect.appendChild(node);
-  });
-
-  // Coba pertahankan value skor jika memungkinkan
-  if(simpanPilihanLama) pSelect.value = simpanPilihanLama;
-
-  calculateAll();
-}
-
-function handleKejuaraanVisibility() {
-  const jenis = document.getElementById('inp-penyelenggara').value;
-  const detailBox = document.querySelector('.id-kejuaraan-detail');
-  if(jenis === 'tidak') detailBox.classList.add('hidden');
-  else detailBox.classList.remove('hidden');
-  calculateAll();
-}
-
-function calculateAll() {
-  // 1. Hitung Nilai Rapor Gabungan
-  let nilaiRapor = 0;
-  if (currentMode === 'ringkas') {
-    nilaiRapor = parseFloat(document.getElementById('inp-rapor-rerata').value) || 0;
+  if (rpMethod === 'direct') {
+    rpPredikatFinal = document.getElementById('rp-direct-select').value;
+    document.getElementById('rp-nilai-display').textContent = rpPredikatFinal === 'baik' ? '85.0' : rpPredikatFinal === 'sedang' ? '67.0' : '45.0';
+    document.getElementById('rp-predikat-display').textContent = rpPredikatFinal.charAt(0).toUpperCase() + rpPredikatFinal.slice(1);
+    calc();
   } else {
-    const inputs = document.querySelectorAll('.inp-mapel-item');
-    let totalMapel = 0;
-    inputs.forEach(inp => totalMapel += parseFloat(inp.value) || 0);
-    nilaiRapor = inputs.length > 0 ? (totalMapel / inputs.length) : 0;
+    calcRP();
   }
-  nilaiRapor = Math.min(Math.max(nilaiRapor, 0), 100);
+}
 
-  // 2. Ambil Nilai TKA Nasional
-  let nilaiTka = parseFloat(document.getElementById('inp-tka').value) || 0;
-  nilaiTka = Math.min(Math.max(nilaiTka, 0), 100);
+function calcRP() {
+  const vals = [1, 2, 3, 4, 5, 6].map(i => parseInt(document.getElementById('ind' + i).value));
+  const avg = vals.reduce((a, b) => a + b, 0) / 6;
+  rpPredikatFinal = avg >= 78 ? 'baik' : avg >= 55 ? 'sedang' : 'kurang';
+  
+  document.getElementById('rp-nilai-display').textContent = (Math.round(avg * 10) / 10).toFixed(1);
+  document.getElementById('rp-predikat-display').textContent = rpPredikatFinal.charAt(0).toUpperCase() + rpPredikatFinal.slice(1);
+  calc();
+}
 
-  // Kombinasi Rapor + TKA (Formula Bobot Gabungan Asal)
-  let skorKomponenRapor = (nilaiRapor * 0.7) + (nilaiTka * 0.3);
+function setJenjang(j, el) {
+  jenjang = j;
+  document.querySelectorAll('#seg-jenjang button').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  
+  // Perbarui label petunjuk teks pada mode ringkas agar tidak membingungkan
+  const cfg = MAPEL_DATA[jenjang];
+  document.getElementById('lbl-ringkas-desc').textContent = `Masukkan nilai rerata 5 semester untuk mapel (${cfg.names.join(', ')})`;
+  
+  buildRaporTable();
+}
 
-  // 3. Ambil Nilai Persentil Dropdown Dinamis
-  let skorPersentil = parseFloat(document.getElementById('inp-persentil-select').value) || 60;
+function setJalur(j, el) {
+  jalur = j;
+  document.querySelectorAll('#seg-jalur button').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  calc();
+}
 
-  // 4. Hitung Skor Prestasi Kejuaraan dari Matriks
+function setMode(m, el) {
+  mode = m;
+  document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('box-lengkap').classList.toggle('hidden', m !== 'lengkap');
+  document.getElementById('box-ringkas').classList.toggle('hidden', m !== 'ringkas');
+  calc();
+}
+
+function togglePrestasi() {
+  const hide = document.getElementById('inp-penyelenggara').value === 'tidak';
+  document.getElementById('row-tingkat').style.display = hide ? 'none' : '';
+  document.getElementById('row-juara').style.display = hide ? 'none' : '';
+  calc();
+}
+
+function buildRaporTable() {
+  const cfg = MAPEL_DATA[jenjang];
+  document.getElementById('mapel-desc').textContent = `Mata pelajaran wajib: ${cfg.names.join(', ')}. Rentang studi: ${cfg.sems.join(', ')}.`;
+  
+  let h = '<thead><tr><th class="lft">Mata Pelajaran</th>';
+  cfg.sems.forEach(s => h += `<th>${s}</th>`);
+  h += '<th>Rerata</th></tr></thead><tbody>';
+  
+  cfg.names.forEach((m, mi) => {
+    h += `<tr><td class="lft">${m}</td>`;
+    cfg.sems.forEach((_, si) => h += `<td><input type="number" id="nv${mi}_${si}" min="0" max="100" step="0.01" value="80" oninput="calcRaporTableOnly()"></td>`);
+    h += `<td class="avg" id="navg-m${mi}">–</td></tr>`;
+  });
+  
+  h += '<tr class="sem-avg"><td class="lft">Rerata Akhir Semester</td>';
+  cfg.sems.forEach((_, si) => h += `<td id="navg-s${si}">–</td>`);
+  h += '<td id="navg-total">–</td></tr></tbody>';
+  
+  document.getElementById('rapor-tbl').innerHTML = h;
+  calcRaporTableOnly();
+}
+
+function calcRaporTableOnly() {
+  const cfg = MAPEL_DATA[jenjang];
+  let all = [];
+  
+  cfg.names.forEach((m, mi) => {
+    let row = cfg.sems.map((_, si) => parseFloat(document.getElementById(`nv${mi}_${si}`).value) || 0);
+    const avg = Math.round(row.reduce((a, b) => a + b, 0) / row.length * 100) / 100;
+    document.getElementById(`navg-m${mi}`).textContent = avg.toFixed(1);
+    all.push(...row);
+  });
+  
+  cfg.sems.forEach((_, si) => {
+    let col = cfg.names.map((_, mi) => parseFloat(document.getElementById(`nv${mi}_${si}`).value) || 0);
+    document.getElementById(`navg-s${si}`).textContent = (Math.round(col.reduce((a, b) => a + b, 0) / col.length * 100) / 100).toFixed(1);
+  });
+  
+  const total = Math.round(all.reduce((a, b) => a + b, 0) / all.length * 100) / 100;
+  document.getElementById('navg-total').textContent = total.toFixed(1);
+  document.getElementById('lbl-rerata-rapor').textContent = total.toFixed(2);
+  calc();
+}
+
+function processPersentilAndRaporData() {
+  const peringkat = Math.max(1, parseInt(document.getElementById('inp-peringkat').value) || 1);
+  const totalSiswa = Math.max(1, parseInt(document.getElementById('inp-total-siswa').value) || 1);
+  const persen = Math.min(Math.round(peringkat / totalSiswa * 100 * 10) / 10, 100);
+  
+  const { skor: skorP, tier: tierP } = (() => {
+    for (const t of TIER[rpPredikatFinal]) if (persen <= t.max) return { skor: t.s, tier: t.t };
+    return { skor: 60, tier: '>tier' };
+  })();
+
+  document.getElementById('persentil-angka').textContent = persen.toFixed(1);
+  document.getElementById('persentil-tier').textContent = tierP;
+  document.getElementById('persentil-skor').textContent = skorP;
+  document.getElementById('persentil-desc').textContent = TIER_DESC[rpPredikatFinal];
+
+  let nilaiRaporRaw = 0;
+  if (mode === 'lengkap') {
+    nilaiRaporRaw = parseFloat(document.getElementById('lbl-rerata-rapor').textContent) || 0;
+  } else {
+    nilaiRaporRaw = parseFloat(document.getElementById('inp-rapor-ringkas').value) || 0;
+  }
+
+  const tkaBi = parseFloat(document.getElementById('tka-bi').value) || 0;
+  const tkaMat = parseFloat(document.getElementById('tka-mat').value) || 0;
+  const rerataTKA = Math.round((tkaBi + tkaMat) / 2 * 100) / 100;
+  
+  // Formula Kombinasi Bobot Gabungan Sesuai Aturan Terbaru: 70% Rapor + 30% TKA
+  const gabunganAkhir = Math.round((nilaiRaporRaw * 0.7 + rerataTKA * 0.3) * 100) / 100;
+  
+  document.getElementById('lbl-rerata-rapor').textContent = nilaiRaporRaw.toFixed(2);
+  document.getElementById('lbl-rerata-tka').textContent = rerataTKA.toFixed(2);
+  document.getElementById('lbl-gabungan').textContent = gabunganAkhir.toFixed(2);
+
+  const pen = document.getElementById('inp-penyelenggara').value;
   let skorPrestasi = 0;
-  const jenisKejuaraan = document.getElementById('inp-penyelenggara').value;
-  if(jenisKejuaraan !== 'tidak') {
-    const tkt = document.getElementById('inp-tingkat').value;
-    const jr = parseInt(document.getElementById('inp-juara').value);
-    skorPrestasi = SKJ_MATRIX[jenisKejuaraan][tkt][jr] || 0;
-  }
-  
-  // 5. Hitung Skor Kepemimpinan (Formula Sub-Bobot Regulasi)
-  let osis = parseFloat(document.getElementById('inp-osis').value) || 0;
-  let ekskul = parseFloat(document.getElementById('inp-ekskul').value) || 0;
-  let ketat = parseFloat(document.getElementById('inp-ketat').value) || 0;
-  let skorPemimpin = (osis * 0.4) + (ekskul * 0.2) + (ketat * 0.4);
-
-  // 6. Matriks Pembobotan Utama Jalur PPDB DKI 2026
-  let bobot = {};
-  if (currentJalur === 'akademik') {
-    bobot = { rapor: 0.40, persentil: 0.20, prestasi: 0.25, pemimpin: 0.15 };
+  if (pen !== 'tidak') {
+    const tingkat = document.getElementById('inp-tingkat').value;
+    const juara = parseInt(document.getElementById('inp-juara').value);
+    skorPrestasi = SKJ[pen][tingkat][juara];
+    document.getElementById('box-prestasi-note').innerHTML = `${PJLABEL[pen]} → Skor Capaian: <b>${skorPrestasi}</b>`;
   } else {
-    bobot = { rapor: 0.20, persentil: 0.05, prestasi: 0.50, pemimpin: 0.25 };
+    document.getElementById('box-prestasi-note').textContent = 'Tidak menyertakan sertifikat prestasi kejuaraan.';
   }
 
-  // Hitung Nilai Akhir Total Indeks Prestasi
-  let cRapor = skorKomponenRapor * bobot.rapor;
-  let cPersentil = skorPersentil * bobot.persentil;
-  let cPrestasi = skorPrestasi * bobot.prestasi;
-  let cPemimpin = skorPemimpin * bobot.pemimpin;
-  let totalIndeks = cRapor + cPersentil + cPrestasi + cPemimpin;
+  const osis = parseInt(document.getElementById('inp-osis').value) || 0;
+  const ekskul = parseInt(document.getElementById('inp-ekskul').value) || 0;
+  const seleksi = parseInt(document.getElementById('inp-seleksi').value) || 0;
+  const skorPemimpin = Math.round(osis * 0.4 + ekskul * 0.2 + seleksi * 0.4);
+  document.getElementById('skor-pemimpin-display').textContent = skorPemimpin;
 
-  // Sinkronisasi Hasil Tampilan UI
-  document.getElementById('S-total').textContent = totalIndeks.toFixed(2);
-  document.getElementById('S-bar').style.width = Math.min(totalIndeks, 100) + '%';
-  document.getElementById('S-jalur').textContent = `PRESTASI ${currentJalur.toUpperCase()} — JALUR ${currentJenjang.toUpperCase()}`;
-
-  // Penentuan Tulisan Status Kompetisi
-  let verdict = '';
-  let vc = '';
-  if(totalIndeks >= 85) { verdict = 'Sangat Kompetitif'; vc = 'color:var(--accent)'; }
-  else if(totalIndeks >= 70) { verdict = 'Kompetitif'; vc = 'color:var(--blue)'; }
-  else if(totalIndeks >= 55) { verdict = 'Cukup Kompetitif'; vc = 'color:var(--amber)'; }
-  else { verdict = 'Perlu Backup Jalur Zonasi'; vc = 'color:var(--red)'; }
-  
-  document.getElementById('S-verdict').textContent = verdict;
-  document.getElementById('S-verdict').style.cssText = vc;
-
-  // Isikan tabel rincian kontribusi nilai akhir
-  document.getElementById('S-breakdown').innerHTML = `
-    <tr>
-      <td>Gabungan Rapor & TKA</td>
-      <td class="mono">${skorKomponenRapor.toFixed(2)}</td>
-      <td>${(bobot.rapor * 100)}%</td>
-      <td class="mono">${cRapor.toFixed(2)}</td>
-    </tr>
-    <tr>
-      <td>Persentil Rapor (Mutu ${currentPredikatSekolah.toUpperCase()})</td>
-      <td class="mono">${skorPersentil}</td>
-      <td>${(bobot.persentil * 100)}%</td>
-      <td class="mono">${cPersentil.toFixed(2)}</td>
-    </tr>
-    <tr>
-      <td>Sertifikat Kejuaraan</td>
-      <td class="mono">${skorPrestasi}</td>
-      <td>${(bobot.prestasi * 100)}%</td>
-      <td class="mono">${cPrestasi.toFixed(2)}</td>
-    </tr>
-    <tr>
-      <td>Indeks Kepemimpinan</td>
-      <td class="mono">${skorPemimpin.toFixed(1)}</td>
-      <td>${(bobot.pemimpin * 100)}%</td>
-      <td class="mono">${cPemimpin.toFixed(2)}</td>
-    </tr>
-  `;
+  return { gabunganAkhir, skorPersentil: skorP, skorPrestasi, skorPemimpin };
 }
-</script>
-</body>
-</html>
+
+function calc() {
+  const b = BOBOT[jenjang][jalur];
+  const pbP = jalur === 'akademik' ? b.pA : b.pN;
+  const { gabunganAkhir, skorPersentil, skorPrestasi, skorPemimpin } = processPersentilAndRaporData();
+
+  const k1 = gabunganAkhir * b.rapor;
+  const k2 = skorPersentil * b.persentil;
+  const k3 = skorPrestasi * pbP;
+  const k4 = skorPemimpin * b.p;
+  const total = Math.round((k1 + k2 + k3 + k4) * 10) / 10;
+
+  // Render Pill Bobot Dinamis
+  document.getElementById('b-rapor').textContent = `Bobot:
