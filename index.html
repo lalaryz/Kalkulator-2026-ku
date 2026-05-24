@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator Indeks Prestasi PMB DKI Jakarta 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --surface2: #f0efe9;
+  --border: #dddcd5;
+  --border2: #c8c7be;
+  --text: #1a1a18;
+  --text2: #5a5a54;
+  --text3: #9a9a92;
+  --accent: #2c5f2e;
+  --accent-bg: #e8f0e8;
+  --accent-text: #1e4020;
+  --blue: #1a4a7a;
+  --blue-bg: #e6eff8;
+  --blue-text: #0f2d4d;
+  --amber: #7a4e0f;
+  --amber-bg: #fdf3e3;
+  --amber-text: #4d2f08;
+  --red: #7a1a1a;
+  --red-bg: #f9ebeb;
+  --red-text: #4d1010;
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding: 2rem 1rem; }
+.container { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 2rem; }
+@media (min-width: 768px) { .container { grid-template-columns: 1.2fr 1fr; } }
+
+header { grid-column: 1 / -1; text-align: center; margin-bottom: 1rem; }
+header h1 { font-size: 1.8rem; font-weight: 700; color: var(--blue); margin-bottom: 0.5rem; }
+header p { color: var(--text2); font-size: 0.95rem; }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+.card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between; }
+
+.form-group { margin-bottom: 1.2rem; }
+label { display: block; font-weight: 500; font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--text); }
+select, input { width: 100%; padding: 0.6rem; border: 1px solid var(--border2); border-radius: var(--radius); font-family: inherit; font-size: 0.95rem; color: var(--text); background: var(--surface); }
+select:focus, input:focus { outline: 2px solid var(--blue); }
+
+.radio-group { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.radio-btn { border: 1px solid var(--border2); border-radius: var(--radius); padding: 0.6rem; text-align: center; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: all 0.2s; }
+.radio-btn.active { background: var(--blue-bg); border-color: var(--blue); color: var(--blue-text); }
+
+.grid-mapel { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; background: var(--surface2); padding: 1rem; border-radius: var(--radius); }
+
+.result-box { text-align: center; padding: 1.5rem; background: var(--surface2); border-radius: var(--radius); margin-bottom: 1.5rem; }
+.score-big { font-family: 'DM Mono', monospace; font-size: 3.5rem; font-weight: 700; color: var(--text); margin: 0.5rem 0; }
+.verdict { font-weight: 700; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+.progress-container { background: var(--border); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 0.8rem; }
+.progress-bar { height: 100%; width: 0%; background: var(--blue); transition: width 0.3s ease; }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 1rem; }
+th, td { text-align: left; padding: 0.6rem; border-bottom: 1px solid var(--border); }
+th { color: var(--text2); font-weight: 500; }
+td.mono { font-family: 'DM Mono', monospace; text-align: right; }
+
+.disclaimer { font-size: 0.8rem; color: var(--text3); margin-top: 1.5rem; line-height: 1.4; text-align: justify; }
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Kalkulator Indeks Prestasi PMB DKI Jakarta 2026</h1>
+  <p>Sesuai Kepgub No. 238 Tahun 2026 & SK Kepala Dinas Pendidikan No. 261 Tahun 2026</p>
+</header>
+
+<div class="container">
+  <div class="card">
+    <div class="card-title">Konfigurasi & Data Calon Murid</div>
+    
+    <div class="form-group">
+      <label>Jenjang Tujuan</label>
+      <div class="radio-group" id="jenjang-group">
+        <div class="radio-btn active" data-value="smp">SMP (Lulusan SD)</div>
+        <div class="radio-btn" data-value="sma">SMA/SMK (Lulusan SMP)</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Jalur Prestasi</label>
+      <div class="radio-group" id="jalur-group">
+        <div class="radio-btn active" data-value="akademik">Akademik</div>
+        <div class="radio-btn" data-value="nonakademik">Non-Akademik</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Metode Input Rapor</label>
+      <div class="radio-group" id="mode-group">
+        <div class="radio-btn active" data-value="ringkas">Input Ringkas Rerata</div>
+        <div class="radio-btn" data-value="lengkap">Input Per Mata Pelajaran</div>
+      </div>
+    </div>
+
+    <div id="box-ringkas">
+      <div class="form-group">
+        <label>Rerata Nilai Rapor Gabungan</label>
+        <input type="number" id="inp-rapor-rerata" min="0" max="100" step="0.01" value="85.00">
+      </div>
+    </div>
+
+    <div id="box-lengkap" class="hidden">
+      <div class="form-group">
+        <label>Nilai Rapor per Mata Pelajaran (Semester 1-5)</label>
+        <div class="grid-mapel" id="wrapper-mapel">
+          </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Nilai Tes Kemampuan Akademik (TKA)</label>
+      <input type="number" id="inp-tka" min="0" max="100" step="0.01" value="80.00">
+    </div>
+
+    <div class="form-group">
+      <label>Persentil Rapor Sekolah</label>
+      <select id="inp-persentil">
+        <option value="100">Zona 1 (Tertinggi / Top 10%) - Skor 100</option>
+        <option value="75">Zona 2 (Top 11% - 25%) - Skor 75</option>
+        <option value="50">Zona 3 (Top 26% - 50%) - Skor 50</option>
+        <option value="25">Zona 4 (Top 51% - 75%) - Skor 25</option>
+        <option value="10">Zona 5 (Terbawah / >75%) - Skor 10</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Sertifikat Kejuaraan / Prestasi Tertinggi</label>
+      <select id="inp-prestasi">
+        <option value="0">Tidak Ada Sertifikat Kejuaraan - Skor 0</option>
+        <option value="100">Internasional Kedinasan (Juara 1/2/3) - Skor 100</option>
+        <option value="100">Nasional Kedinasan (Juara 1) - Skor 100</option>
+        <option value="95">Nasional Kedinasan (Juara 2) - Skor 95</option>
+        <option value="90">Nasional Kedinasan (Juara 3) - Skor 90</option>
+        <option value="90">Provinsi Kedinasan (Juara 1) - Skor 90</option>
+        <option value="85">Provinsi Kedinasan (Juara 2) - Skor 85</option>
+        <option value="80">Provinsi Kedinasan (Juara 3) - Skor 80</option>
+        <option value="80">Kab/Kota Kedinasan (Juara 1) - Skor 80</option>
+        <option value="75">Kab/Kota Kedinasan (Juara 2) - Skor 75</option>
+        <option value="70">Kab/Kota Kedinasan (Juara 3) - Skor 70</option>
+        <option value="85">Internasional Kurasi/Masyarakat (Juara 1) - Skor 85</option>
+        <option value="80">Internasional Kurasi/Masyarakat (Juara 2) - Skor 80</option>
+        <option value="70">Internasional Kurasi/Masyarakat (Juara 3) - Skor 70</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Pengalaman Kepemimpinan OSIS / MPK</label>
+      <select id="inp-osis">
+        <option value="0">Bukan Pengurus / Tidak Ada - Skor 0</option>
+        <option value="100">Ketua OSIS / MPK - Skor 100</option>
+        <option value="67">Pengurus Inti (Wakil, Sekretaris, Bendahara) - Skor 67</option>
+        <option value="33">Ketua Seksi / Anggota Seksi - Skor 33</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Pengalaman Kepemimpinan Ekstrakurikuler</label>
+      <select id="inp-ekskul">
+        <option value="0">Bukan Pengurus / Tidak Ada - Skor 0</option>
+        <option value="100">Ketua Ekstrakurikuler - Skor 100</option>
+        <option value="67">Pengurus Inti (Wakil, Sekretaris, Bendahara) - Skor 67</option>
+        <option value="33">Ketua Seksi / Koordinator - Skor 33</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Sertifikasi Khusus / Seleksi Ketat (Pramuka Garuda, Hafiz, Paskibra)</label>
+      <select id="inp-ketat">
+        <option value="0">Tidak Ada - Skor 0</option>
+        <option value="100">Tingkat Internasional - Skor 100</option>
+        <option value="81">Tingkat Nasional - Skor 81</option>
+        <option value="62">Tingkat Provinsi - Skor 62</option>
+        <option value="43">Tingkat Kabupaten/Kota - Skor 43</option>
+        <option value="24">Tingkat Kecamatan - Skor 24</option>
+      </select>
+    </div>
+  </div>
+
+  <div>
+    <div class="card" style="position: sticky; top: 1rem;">
+      <div class="card-title">Kalkulasi Indeks Akhir</div>
+      
+      <div class="result-box">
+        <div style="font-size:0.85rem; color:var(--text2);" id="S-jalur">Jalur Akademik</div>
+        <div class="score-big" id="S-total">0.00</div>
+        <div class="verdict" id="S-verdict">-</div>
+        <div class="progress-container">
+          <div class="progress-bar" id="S-bar"></div>
+        </div>
+      </div>
+
+      <div style="font-weight:600; font-size:0.9rem; margin-bottom:0.5rem;">Rincian Perhitungan Komponen:</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Komponen</th>
+            <th>Skor Asal</th>
+            <th>Bobot</th>
+            <th style="text-align:right">Kontribusi</th>
+          </tr>
+        </thead>
+        <tbody id="S-breakdown">
+          </tbody>
+      </table>
+
+      <div class="disclaimer">
+        * <strong>Disclaimer:</strong> Aplikasi ini merupakan alat bantu estimasi mandiri berdasarkan formulasi regulasi DKI Jakarta Tahun 2026. Nilai murni mutlak data persentil dan kelayakan sertifikat sepenuhnya diproses secara terpusat melalui sistem resmi SIDANIRA Dinas Pendidikan Provinsi DKI Jakarta.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Konfigurasi Mata Pelajaran Berdasarkan Regulasi Baru
+const MAPEL_CONFIG = {
+  smp: [
+    { id: 'pancasila', nama: 'Pendidikan Pancasila / PKn' },
+    { id: 'ind', nama: 'Bahasa Indonesia' },
+    { id: 'mat', nama: 'Matematika' },
+    { id: 'ipa', nama: 'IPA / IPAS' }
+  ],
+  sma: [
+    { id: 'pancasila', nama: 'Pendidikan Pancasila / PKn' },
+    { id: 'ind', nama: 'Bahasa Indonesia' },
+    { id: 'mat', nama: 'Matematika' },
+    { id: 'ipa', nama: 'IPA' },
+    { id: 'ips', nama: 'IPS' },
+    { id: 'ing', nama: 'Bahasa Inggris' }
+  ]
+};
+
+// State Aplikasi
+let currentJenjang = 'smp';
+let currentJalur = 'akademik';
+let currentMode = 'ringkas';
+
+// Inisialisasi Event Listener
+document.addEventListener('DOMContentLoaded', () => {
+  setupRadioButtons();
+  renderMapelInputs();
+  calculateAll();
+  
+  // Input Listeners
+  document.getElementById('inp-rapor-rerata').addEventListener('input', calculateAll);
+  document.getElementById('inp-tka').addEventListener('input', calculateAll);
+  document.getElementById('inp-persentil').addEventListener('change', calculateAll);
+  document.getElementById('inp-prestasi').addEventListener('change', calculateAll);
+  document.getElementById('inp-osis').addEventListener('change', calculateAll);
+  document.getElementById('inp-ekskul').addEventListener('change', calculateAll);
+  document.getElementById('inp-ketat').addEventListener('change', calculateAll);
+});
+
+function setupRadioButtons() {
+  const setupGroup = (groupId, callback) => {
+    const container = document.getElementById(groupId);
+    container.querySelectorAll('.radio-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        container.querySelectorAll('.radio-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        callback(btn.dataset.value);
+      });
+    });
+  };
+
+  setupGroup('jenjang-group', (val) => {
+    currentJenjang = val;
+    renderMapelInputs();
+    calculateAll();
+  });
+
+  setupGroup('jalur-group', (val) => {
+    currentJalur = val;
+    calculateAll();
+  });
+
+  setupGroup('mode-group', (val) => {
+    currentMode = val;
+    if(val === 'lengkap') {
+      document.getElementById('box-lengkap').classList.remove('hidden');
+      document.getElementById('box-ringkas').classList.add('hidden');
+    } else {
+      document.getElementById('box-lengkap').classList.add('hidden');
+      document.getElementById('box-ringkas').classList.remove('hidden');
+    }
+    calculateAll();
+  });
+}
+
+function renderMapelInputs() {
+  const container = document.getElementById('wrapper-mapel');
+  container.innerHTML = '';
+  const mapels = MAPEL_CONFIG[currentJenjang];
+  
+  mapels.forEach(m => {
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <label style="font-size:0.8rem; color:var(--text2);">${m.nama}</label>
+      <input type="number" class="inp-mapel-item" data-id="${m.id}" min="0" max="100" step="0.01" value="85.00">
+    `;
+    container.appendChild(div);
+    div.querySelector('input').addEventListener('input', calculateAll);
+  });
+}
+
+function calculateAll() {
+  // 1. Hitung Nilai Rapor Gabungan
+  let nilaiRapor = 0;
+  if (currentMode === 'ringkas') {
+    nilaiRapor = parseFloat(document.getElementById('inp-rapor-rerata').value) || 0;
+  } else {
+    const inputs = document.querySelectorAll('.inp-mapel-item');
+    let totalMapel = 0;
+    inputs.forEach(inp => totalMapel += parseFloat(inp.value) || 0);
+    nilaiRapor = inputs.length > 0 ? (totalMapel / inputs.length) : 0;
+  }
+  
+  // Clamp value 0-100
+  nilaiRapor = Math.min(Math.max(nilaiRapor, 0), 100);
+
+  // 2. Ambil Nilai TKA
+  let nilaiTka = parseFloat(document.getElementById('inp-tka').value) || 0;
+  nilaiTka = Math.min(Math.max(nilaiTka, 0), 100);
+
+  // Gabungan Komponen Rapor + TKA (Bobot 50:50 dari nilai asal)
+  let skorKomponenRapor = (nilaiRapor + nilaiTka) / 2;
+
+  // 3. Ambil Nilai Komponen Lainnya
+  let skorPersentil = parseFloat(document.getElementById('inp-persentil').value) || 0;
+  let skorPrestasi = parseFloat(document.getElementById('inp-prestasi').value) || 0;
+  
+  // 4. Hitung Skor Kepemimpinan (Formula Sub-Bobot Regulasi)
+  let osis = parseFloat(document.getElementById('inp-osis').value) || 0;
+  let ekskul = parseFloat(document.getElementById('inp-ekskul').value) || 0;
+  let ketat = parseFloat(document.getElementById('inp-ketat').value) || 0;
+  let skorPemimpin = (osis * 0.4) + (ekskul * 0.2) + (ketat * 0.4);
+
+  // 5. Pembobotan Berdasarkan Jalur PPDB (Sesuai Regulasi Resmi Terpisah)
+  let bobot = {};
+  if (currentJalur === 'akademik') {
+    bobot = { rapor: 0.40, persentil: 0.20, prestasi: 0.25, pemimpin: 0.15 };
+  } else {
+    bobot = { rapor: 0.20, persentil: 0.05, prestasi: 0.50, pemimpin: 0.25 };
+  }
+
+  // Hitung Nilai Akhir Indeks Prestasi
+  let cRapor = skorKomponenRapor * bobot.rapor;
+  let cPersentil = skorPersentil * bobot.persentil;
+  let cPrestasi = skorPrestasi * bobot.prestasi;
+  let cPemimpin = skorPemimpin * bobot.pemimpin;
+  let totalIndeks = cRapor + cPersentil + cPrestasi + cPemimpin;
+
+  // Render Ke UI
+  document.getElementById('S-total').textContent = totalIndeks.toFixed(2);
+  document.getElementById('S-bar').style.width = Math.min(totalIndeks, 100) + '%';
+  document.getElementById('S-jalur').textContent = `JALUR PRESTASI ${currentJalur.toUpperCase()} · ${currentJenjang.toUpperCase()}`;
+
+  // Penentuan Status Kompetitif
+  let verdict = '';
+  let vc = '';
+  if(totalIndeks >= 85) { verdict = 'Sangat Kompetitif'; vc = 'color:var(--accent)'; }
+  else if(totalIndeks >= 70) { verdict = 'Kompetitif'; vc = 'color:var(--blue)'; }
+  else if(totalIndeks >= 55) { verdict = 'Cukup Kompetitif'; vc = 'color:var(--amber)'; }
+  else { verdict = 'Perlu Pendukung Zonasi/Afirmasi'; vc = 'color:var(--red)'; }
+  
+  document.getElementById('S-verdict').textContent = verdict;
+  document.getElementById('S-verdict').style.cssText = vc;
+
+  // Render Tabel Breakdown Kontribusi Nilai
+  document.getElementById('S-breakdown').innerHTML = `
+    <tr>
+      <td>Rerata Rapor + TKA</td>
+      <td class="mono">${skorKomponenRapor.toFixed(2)}</td>
+      <td>${(bobot.rapor * 100)}%</td>
+      <td class="mono">${cRapor.toFixed(2)}</td>
+    </tr>
+    <tr>
+      <td>Persentil Rapor</td>
+      <td class="mono">${skorPersentil}</td>
+      <td>${(bobot.persentil * 100)}%</td>
+      <td class="mono">${cPersentil.toFixed(2)}</td>
+    </tr>
+    <tr>
+      <td>Sertifikat Kejuaraan</td>
+      <td class="mono">${skorPrestasi}</td>
+      <td>${(bobot.prestasi * 100)}%</td>
+      <td class="mono">${cPrestasi.toFixed(2)}</td>
+    </tr>
+    <tr>
+      <td>Indeks Kepemimpinan</td>
+      <td class="mono">${skorPemimpin.toFixed(1)}</td>
+      <td>${(bobot.pemimpin * 100)}%</td>
+      <td class="mono">${cPemimpin.toFixed(2)}</td>
+    </tr>
+  `;
+}
+</script>
+</body>
+</html>
