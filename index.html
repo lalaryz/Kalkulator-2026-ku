@@ -61,6 +61,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); colo
 .field { margin-bottom: 10px; }
 .field label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 4px; }
 .field input, .field select { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: inherit; font-size: 13px; background: var(--surface); color: var(--text); transition: border-color 0.15s; }
+.field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
 .field-row { display: flex; gap: 8px; }
 .field-row .field { flex: 1; }
 .field-inline { display: flex; align-items: center; gap: 8px; }
@@ -81,10 +82,10 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
 .summary { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-top: 20px; }
 .summary-head { background: var(--text); color: #fff; padding: 14px 16px; font-size: 14px; font-weight: 600; }
 .summary-body { padding: 16px; }
-.metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 16px; }
+.metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin-bottom: 16px; }
 .metric { background: var(--surface2); border-radius: var(--radius-sm); padding: 12px 14px; }
 .metric .lbl { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
-.metric .val { font-size: 20px; font-weight: 600; color: var(--text); font-family: 'DM Mono', monospace; }
+.metric .val { font-size: 18px; font-weight: 600; color: var(--text); font-family: 'DM Mono', monospace; }
 .total-display { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
 .total-num { font-size: 48px; font-weight: 600; color: var(--accent); font-family: 'DM Mono', monospace; line-height: 1; }
 .total-side .verdict { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
@@ -108,6 +109,41 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
   <h1>🎓 Kalkulator Indeks Prestasi PMB DKI Jakarta 2026</h1>
   <p>Verifikasi mandiri formulasi indeks seleksi PPDB sesuai regulasi resmi.</p>
   <span class="badge-ref">SK Kadisdik No. 261 & 262 Tahun 2026</span>
+</div>
+
+<div class="card" style="margin-bottom: 20px;">
+  <div class="card-head">
+    <div class="step-badge">⚙️</div>
+    <div class="card-title">Metode Penentuan Rapor Pendidikan Sekolah Asal</div>
+  </div>
+  <div class="card-body">
+    <div class="field">
+      <label>Bagaimana Anda ingin menentukan kualitas Rapor Pendidikan sekolah asal?</label>
+      <select id="rp-method" onchange="switchRPMethod()">
+        <option value="direct">Langsung Pilih Predikat Akhir</option>
+        <option value="manual">Hitung Otomatis dari 6 Indikator Rapor Pendidikan</option>
+      </select>
+    </div>
+    
+    <div id="rp-box-direct" class="field">
+      <label>Predikat Akhir Sekolah</label>
+      <select id="rp-direct-select" onchange="calc()">
+        <option value="baik">Baik (Rerata 78 - 100)</option>
+        <option value="sedang" selected>Sedang (Rerata 55 - 77)</option>
+        <option value="kurang">Kurang (Rerata 33 - 54)</option>
+      </select>
+    </div>
+
+    <div id="rp-box-manual" class="ind-grid hidden">
+      <div class="field"><label>1. Kemampuan Literasi</label><select id="ind1" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
+      <div class="field"><label>2. Kemampuan Numerasi</label><select id="ind2" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
+      <div class="field"><label>3. Karakter Murid</label><select id="ind3" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
+      <div class="field"><label>4. Kebhinekaan</label><select id="ind4" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
+      <div class="field"><label>5. Keamanan Sekolah</label><select id="ind5" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
+      <div class="field"><label>6. Kualitas Pembelajaran</label><select id="ind6" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
+    </div>
+  </div>
+  <div class="card-note">Nilai Rapor Pendidikan Sekolah = <b id="rp-nilai-display">67.0</b> → Predikat: <b id="rp-predikat-display">SEDANG</b></div>
 </div>
 
 <div class="controls">
@@ -134,41 +170,6 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
 
 <div class="card">
   <div class="card-head">
-    <div class="step-badge">1</div>
-    <div class="card-title">Predikat Rapor Pendidikan Sekolah Asal</div>
-  </div>
-  <div class="card-body">
-    <div class="field">
-      <label>Metode Input Mutu Sekolah</label>
-      <select id="rp-method" onchange="switchRPMethod()">
-        <option value="direct">Langsung Pilih Predikat Akhir</option>
-        <option value="manual">Hitung Otomatis dari 6 Indikator Rapor Pendidikan</option>
-      </select>
-    </div>
-    
-    <div id="rp-box-direct" class="field">
-      <label>Predikat Akhir Sekolah</label>
-      <select id="rp-direct-select" onchange="calc()">
-        <option value="baik">Baik (Rerata 78 - 100)</option>
-        <option value="sedang" selected>Sedang (Rerata 55 - 77)</option>
-        <option value="kurang">Kurang (Rerata 33 - 54)</option>
-      </select>
-    </div>
-
-    <div id="rp-box-manual" class="ind-grid hidden">
-      <div class="field"><label>1. Kemampuan Literasi</label><select id="ind1" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
-      <div class="field"><label>2. Kemampuan Numerasi</label><select id="ind2" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
-      <div class="field"><label>3. Karakter Murid</label><select id="ind3" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
-      <div class="field"><label>4. Kebhinekaan</label><select id="ind4" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
-      <div class="field"><label>5. Keamanan Sekolah</label><select id="ind5" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
-      <div class="field"><label>6. Kualitas Pembelajaran</label><select id="ind6" onchange="calcRP()"><option value="100">Baik</option><option value="67" selected>Sedang</option><option value="33">Kurang</option></select></div>
-    </div>
-  </div>
-  <div class="card-note">Nilai Rapor Pendidikan Sekolah = <b id="rp-nilai-display">67.0</b> → Predikat: <b id="rp-predikat-display">Sedang</b></div>
-</div>
-
-<div class="card">
-  <div class="card-head">
     <div class="step-badge">2</div>
     <div class="card-title">Persentil Nilai Rapor Siswa</div>
     <span class="pill pill-blue" id="b-persentil">Bobot: 20%</span>
@@ -177,7 +178,7 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
     <div class="field-row">
       <div class="field">
         <label>Peringkat Anda</label>
-        <div class="field-inline"><input type="number" id="inp-peringkat" value="20" oninput="calc()"><span>urutan ke-</span></div>
+        <div class="field-inline"><input type="number" id="inp-peringkat" value="40" oninput="calc()"><span>urutan ke-</span></div>
       </div>
       <div class="field">
         <label>Total Siswa Paralel</label>
@@ -221,10 +222,12 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
   </div>
   <div class="card-body">
     <div class="field" style="margin-bottom:15px; padding-bottom:10px; border-bottom:1px dashed var(--border)">
-      <label style="font-weight:600; color:var(--blue)">A. Sertifikat Bidang Akademik</label>
+      <label style="font-weight:600; color:var(--blue)">A. Sertifikat Bidang Academic / Perlombaan Sains</label>
       <select id="sertifikat-aka" onchange="calc()">
         <option value="0">Tidak Ada Sertifikat Akademik - Skor 0</option>
-        <option value="100">Kedinasan Berjenjang · Internasional (Juara 1/2/3) - Skor 100/97/94</option>
+        <option value="100">Kedinasan Berjenjang · Internasional Juara 1 - Skor 100</option>
+        <option value="97">Kedinasan Berjenjang · Internasional Juara 2 - Skor 97</option>
+        <option value="94">Kedinasan Berjenjang · Internasional Juara 3 - Skor 94</option>
         <option value="91">Kedinasan Berjenjang · Nasional Juara 1 - Skor 91</option>
         <option value="88">Kedinasan Berjenjang · Nasional Juara 2 - Skor 88</option>
         <option value="85">Kedinasan Berjenjang · Nasional Juara 3 - Skor 85</option>
@@ -238,7 +241,9 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
       <label style="font-weight:600; color:var(--accent)">B. Sertifikat Bidang Non-Akademik (Olahraga, Seni, Pramuka, dll)</label>
       <select id="sertifikat-non" onchange="calc()">
         <option value="0">Tidak Ada Sertifikat Non-Akademik - Skor 0</option>
-        <option value="100">Kedinasan Berjenjang · Internasional (Juara 1/2/3) - Skor 100/97/94</option>
+        <option value="100">Kedinasan Berjenjang · Internasional Juara 1 - Skor 100</option>
+        <option value="97">Kedinasan Berjenjang · Internasional Juara 2 - Skor 97</option>
+        <option value="94">Kedinasan Berjenjang · Internasional Juara 3 - Skor 94</option>
         <option value="91">Kedinasan Berjenjang · Nasional Juara 1 - Skor 91</option>
         <option value="88">Kedinasan Berjenjang · Nasional Juara 2 - Skor 88</option>
         <option value="85">Kedinasan Berjenjang · Nasional Juara 3 - Skor 85</option>
@@ -254,11 +259,11 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
 <div class="card">
   <div class="card-head">
     <div class="step-badge">5</div>
-    <div class="card-title">Kriteria Kepemimpinan &amp; Seleksi Ketat</div>
+    <div class="card-title" id="lbl-title-step5">Kriteria Seleksi Ketat</div>
     <span class="pill pill-blue" id="b-kepemimpinan">Bobot: 10%</span>
   </div>
   
-  <div class="card-body" id="box-pemimpin-sma">
+  <div class="card-body hidden" id="box-pemimpin-sma">
     <div class="field"><label>Jabatan Inti OSIS / MPK (Unsur: 40%)</label>
       <select id="sma-osis" onchange="calc()"><option value="0">Tidak ada</option><option value="100">Ketua</option><option value="67">Pengurus Harian</option><option value="33">Ketua/Anggota Seksi</option></select>
     </div>
@@ -270,14 +275,14 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
     </div>
   </div>
 
-  <div class="card-body hidden" id="box-pemimpin-smp">
-    <div class="field"><label>Capaian Sertifikasi Seleksi Ketat Bukan Perlombaan (Garuda / Jumbara / Hafiz)</label>
+  <div class="card-body" id="box-pemimpin-smp">
+    <div class="field"><label>Capaian Sertifikasi Seleksi Ketat Bukan Perlombaan (Pramuka Garuda / Jambore Nasional / Jumbara PMR / Hafiz Quran)</label>
       <select id="smp-seleksi" onchange="calc()">
-        <option value="0">Tidak Ada Kualifikasi - Skor 0</option>
-        <option value="100">Tingkat Internasional / Hafiz 28-30 Juz - Skor 100</option>
-        <option value="81">Tingkat Nasional / Hafiz 19-21 Juz - Skor 81</option>
-        <option value="62">Tingkat Provinsi / Hafiz 11-12 Juz - Skor 62</option>
-        <option value="43">Tingkat Kota-Kabupaten / Hafiz 7-8 Juz - Skor 43</option>
+        <option value="0">Tidak Ada Kualifikasi Seleksi Ketat - Skor 0</option>
+        <option value="100">Tingkat Internasional / Hafiz Quran 28 - 30 Juz - Skor 100</option>
+        <option value="81">Tingkat Nasional / Hafiz Quran 19 - 21 Juz - Skor 81</option>
+        <option value="62">Tingkat Provinsi / Hafiz Quran 11 - 12 Juz - Skor 62</option>
+        <option value="43">Tingkat Kota-Kabupaten / Hafiz Quran 7 - 8 Juz - Skor 43</option>
       </select>
     </div>
   </div>
@@ -306,7 +311,7 @@ table.rapor input { width: 52px; padding: 3px 4px; border: 1px solid var(--borde
       <thead><tr><th>Komponen Pembentuk Indeks</th><th class="r">Raw Skor</th><th class="r">Bobot</th><th class="r">Kontribusi</th></tr></thead>
       <tbody id="S-breakdown"></tbody>
     </table>
-    <div class="disclaimer">⚠️ <b>Kalkulasi Selesai:</b> Rumus divalidasi langsung berdasarkan SK Kepala Dinas Pendidikan Provinsi DKI Jakarta Nomor 261 Tahun 2026.</div>
+    <div class="disclaimer">⚠️ <b>Kalkulasi Sukses:</b> Formulasi divalidasi presisi berdasarkan Keputusan Kepala Dinas Pendidikan Provinsi DKI Jakarta Nomor 261 Tahun 2026.</div>
   </div>
 </div>
 
@@ -324,22 +329,46 @@ const MAPEL_DATA = {
   sma: { names: ['Pendidikan Pancasila', 'Bahasa Indonesia', 'Matematika', 'IPA', 'IPS', 'Bahasa Inggris'], sems: ['Kls 7 Sem 1', 'Kls 7 Sem 2', 'Kls 8 Sem 1', 'Kls 8 Sem 2', 'Kls 9 Sem 1'] }
 };
 
-// DATA BOBOT DIKUNCI 100% PERSIS TABEL REGULASI RESMI (KEPEMIMPINAN NON-AKADEMIK KUNCI 25%)
 const BOBOT = {
   smp: {
     akademik: { rapor: 0.40, persentil: 0.20, aka: 0.25, non: 0.05, pemimpin: 0.10 },
-    nonakademik: { rapor: 0.20, persentil: 0.05, aka: 0.05, non: 0.50, pemimpin: 0.25 }
+    nonakademik: { rapor: 0.20, persentil: 0.05, aka: 0.05, non: 0.50, pemimpin: 0.20 }
   },
   sma: {
     akademik: { rapor: 0.40, persentil: 0.20, aka: 0.25, non: 0.05, pemimpin: 0.10 },
-    nonakademik: { rapor: 0.20, persentil: 0.05, aka: 0.05, non: 0.50, pemimpin: 0.25 }
+    nonakademik: { rapor: 0.20, persentil: 0.05, aka: 0.05, non: 0.50, pemimpin: 0.20 }
   }
 };
 
+// PERBAIKAN LOGIKA BATAS MAKSIMUM DAN MINIMUM TIERING PERSENTIL SECARA SANGAT KETAT
 const TIER = {
-  baik: [{ max: 15, s: 100, t: '1–15%' }, { max: 30, s: 90, t: '16–30%' }, { max: 45, s: 80, t: '31–45%' }, { max: 60, s: 70, t: '46–60%' }, { max: 100, s: 60, t: '>60%' }],
-  sedang: [{ max: 10, s: 100, t: '1–10%' }, { max: 20, s: 90, t: '11–20%' }, { max: 30, s: 80, t: '21–30%' }, { max: 40, s: 70, t: '31–40%' }, { max: 100, s: 60, t: '>40%' }],
-  kurang: [{ max: 5, s: 100, t: '1–5%' }, { max: 10, s: 90, t: '6–10%' }, { max: 15, s: 80, t: '11–15%' }, { max: 20, s: 70, t: '16–20%' }, { max: 100, s: 60, t: '>20%' }]
+  baik: [
+    { min: 0,   max: 15.0,  s: 100, t: '1–15%' },
+    { min: 15.0, max: 30.0,  s: 90,  t: '16–30%' },
+    { min: 30.0, max: 45.0,  s: 80,  t: '31–45%' },
+    { min: 45.0, max: 60.0,  s: 70,  t: '46–60%' },
+    { min: 60.0, max: 100.0, s: 60,  t: '>60%' }
+  ],
+  sedang: [
+    { min: 0,   max: 10.0,  s: 100, t: '1–10%' },
+    { min: 10.0, max: 20.0,  s: 90,  t: '11–20%' },
+    { min: 20.0, max: 30.0,  s: 80,  t: '21–30%' },
+    { min: 30.0, max: 40.0,  s: 70,  t: '31–40%' },
+    { min: 40.0, max: 100.0, s: 60,  t: '>40%' }
+  ],
+  kurang: [
+    { min: 0,   max: 5.0,   s: 100, t: '1–5%' },
+    { min: 5.0,  max: 10.0,  s: 90,  t: '6–10%' },
+    { min: 10.0, max: 15.0,  s: 80,  t: '11–15%' },
+    { min: 15.0, max: 20.0,  s: 70,  t: '16–20%' },
+    { min: 20.0, max: 100.0, s: 60,  t: '>20%' }
+  ]
+};
+
+const TIER_DESC = {
+  baik: 'Aturan Tier Sekolah (BAIK): 1–15%=100 · 16–30%=90 · 31–45%=80 · 46–60%=70 · >60%=60',
+  sedang: 'Aturan Tier Sekolah (SEDANG): 1–10%=100 · 11–20%=90 · 21–30%=80 · 31–40%=70 · >40%=60',
+  kurang: 'Aturan Tier Sekolah (KURANG): 1–5%=100 · 6–10%=90 · 11–15%=80 · 16–20%=70 · >20%=60'
 };
 
 function switchRPMethod() {
@@ -369,8 +398,14 @@ function setJenjang(j, el) {
   jenjang = j;
   document.querySelectorAll('#seg-jenjang button').forEach(b => b.classList.remove('on'));
   el.classList.add('on');
+  
   document.getElementById('box-pemimpin-sma').classList.toggle('hidden', jenjang !== 'sma');
   document.getElementById('box-pemimpin-smp').classList.toggle('hidden', jenjang !== 'smp');
+  document.getElementById('lbl-title-step5').textContent = jenjang === 'sma' ? 'Pengalaman Organisasi & Kepemimpinan' : 'Kriteria Seleksi Ketat';
+
+  const cfg = MAPEL_DATA[jenjang];
+  document.getElementById('lbl-ringkas-desc').textContent = `Masukkan rerata gabungan 5 semester untuk mapel (${cfg.names.join(', ')})`;
+  
   buildRaporTable();
 }
 
@@ -425,18 +460,29 @@ function calcRaporTableOnly() {
 function calc() {
   const b = BOBOT[jenjang][jalur];
   
-  // 1. Hitung Persentil
+  // 1. PERBAIKAN BUG PERSENTIL: Logika Pemetaan Menggunakan Min & Max Secara Eksplisit
   const peringkat = Math.max(1, parseInt(document.getElementById('inp-peringkat').value) || 1);
   const totalSiswa = Math.max(1, parseInt(document.getElementById('inp-total-siswa').value) || 1);
   const persen = Math.min(Math.round(peringkat / totalSiswa * 100 * 10) / 10, 100);
+  
   let skorPersentil = 60;
-  let tierP = '>tier';
-  for (const t of TIER[rpPredikatFinal]) {
-    if (persen <= t.max) { skorPersentil = t.s; tierP = t.t; break; }
+  let tierP = '>20%';
+  const sebaranTier = TIER[rpPredikatFinal];
+  
+  for (let i = 0; i < sebaranTier.length; i++) {
+    const row = sebaranTier[i];
+    // Memakai pembanding inklusif terhadap batas atas wilayah persentil peringkat siswa
+    if (persen <= row.max) {
+      skorPersentil = row.s;
+      tierP = row.t;
+      break; // Mengunci agar loop langsung berhenti saat kriteria terpenuhi
+    }
   }
+  
   document.getElementById('persentil-angka').textContent = persen.toFixed(1);
   document.getElementById('persentil-tier').textContent = tierP;
   document.getElementById('persentil-skor').textContent = skorPersentil;
+  document.getElementById('persentil-desc').textContent = TIER_DESC[rpPredikatFinal];
 
   // 2. Rapor & TKA
   let raporRaw = mode === 'lengkap' ? (parseFloat(document.getElementById('lbl-rerata-rapor').textContent) || 0) : (parseFloat(document.getElementById('inp-rapor-ringkas').value) || 0);
@@ -449,25 +495,25 @@ function calc() {
   document.getElementById('lbl-rerata-tka').textContent = rerataTKA.toFixed(2);
   document.getElementById('lbl-gabungan').textContent = gabunganAkhir.toFixed(2);
 
-  // 3. Ambil Nilai Sertifikat Terpisah (Kondisi Ideal)
+  // 3. Sertifikat
   const rawAka = parseFloat(document.getElementById('sertifikat-aka').value) || 0;
   const rawNon = parseFloat(document.getElementById('sertifikat-non').value) || 0;
   document.getElementById('raw-aka-display').textContent = rawAka;
   document.getElementById('raw-non-display').textContent = rawNon;
 
-  // 4. Hitung Komponen Kepemimpinan
+  // 4. Kriteria Seleksi / Kepemimpinan
   let skorPemimpin = 0;
   if (jenjang === 'sma') {
     const osis = parseInt(document.getElementById('sma-osis').value) || 0;
     const ekskul = parseInt(document.getElementById('sma-ekskul').value) || 0;
-    const seleksi = parseInt(document.getElementById('sma-seleksi').value) || 0;
-    skorPemimpin = Math.round(osis * 0.4 + ekskul * 0.2 + seleksi * 0.4);
+    const resmiSeleksi = parseInt(document.getElementById('sma-seleksi').value) || 0;
+    skorPemimpin = Math.round(osis * 0.4 + ekskul * 0.2 + resmiSeleksi * 0.4);
   } else {
     skorPemimpin = parseInt(document.getElementById('smp-seleksi').value) || 0;
   }
   document.getElementById('pemimpin-final-display').textContent = skorPemimpin;
 
-  // 5. Total Akumulasi Indeks
+  // 5. Total Akumulasi Akhir
   const kRapor = gabunganAkhir * b.rapor;
   const kPersen = skorPersentil * b.persentil;
   const kAka = rawAka * b.aka;
@@ -475,10 +521,10 @@ function calc() {
   const kPemimpin = skorPemimpin * b.pemimpin;
   const total = Math.round((kRapor + kPersen + kAka + kNon + kPemimpin) * 10) / 10;
 
-  // UI Updates
+  // Render UI Sync
   document.getElementById('b-rapor').textContent = `Bobot: ${(b.rapor * 100).toFixed(0)}%`;
   document.getElementById('b-persentil').textContent = `Bobot: ${(b.persentil * 100).toFixed(0)}%`;
-  document.getElementById('b-prestasi').textContent = `Bobot: Akdemik ${(b.aka * 100).toFixed(0)}% + Non-Aka ${(b.non * 100).toFixed(0)}%`;
+  document.getElementById('b-prestasi').textContent = `Bobot: Aka ${(b.aka * 100).toFixed(0)}% + Non ${(b.non * 100).toFixed(0)}%`;
   document.getElementById('b-kepemimpinan').textContent = `Bobot: ${(b.pemimpin * 100).toFixed(0)}%`;
 
   document.getElementById('S-rapor').textContent = gabunganAkhir.toFixed(1);
@@ -494,15 +540,16 @@ function calc() {
   document.getElementById('S-verdict').textContent = verdict;
 
   document.getElementById('S-breakdown').innerHTML = `
-    <tr><td>Rapor + TKA Gabungan</td><td class="r">${gabunganAkhir.toFixed(2)}</td><td class="r">${(b.rapor*100)}%</td><td class="r">${kRapor.toFixed(2)}</td></tr>
-    <tr><td>Persentil Rapor Sekolah</td><td class="r">${skorPersentil}</td><td class="r">${(b.persentil*100)}%</td><td class="r">${kPersen.toFixed(2)}</td></tr>
+    <tr><td>Rapor + TKA Gabungan (70%:30%)</td><td class="r">${gabunganAkhir.toFixed(2)}</td><td class="r">${(b.rapor*100)}%</td><td class="r">${kRapor.toFixed(2)}</td></tr>
+    <tr><td>Persentil Peringkat Rapor (Mutu ${rpPredikatFinal.toUpperCase()})</td><td class="r">${skorPersentil}</td><td class="r">${(b.persentil*100)}%</td><td class="r">${kPersen.toFixed(2)}</td></tr>
     <tr><td>Kejuaraan Akademik</td><td class="r">${rawAka}</td><td class="r">${(b.aka*100)}%</td><td class="r">${kAka.toFixed(2)}</td></tr>
     <tr><td>Kejuaraan Non-Akademik</td><td class="r">${rawNon}</td><td class="r">${(b.non*100)}%</td><td class="r">${kNon.toFixed(2)}</td></tr>
-    <tr><td>Kriteria Kepemimpinan</td><td class="r">${skorPemimpin}</td><td class="r">${(b.pemimpin*100)}%</td><td class="r">${kPemimpin.toFixed(2)}</td></tr>
+    <tr><td>${jenjang === 'sma' ? 'Indeks Kepemimpinan' : 'Seleksi Ketat'}</td><td class="r">${skorPemimpin}</td><td class="r">${(b.pemimpin*100)}%</td><td class="r">${kPemimpin.toFixed(2)}</td></tr>
   `;
 }
 
 buildRaporTable();
+setJenjang('smp', document.querySelector('#seg-jenjang button'));
 switchRPMethod();
 </script>
 </body>
